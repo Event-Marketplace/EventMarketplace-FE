@@ -1,3 +1,9 @@
+import GlobalLayout from "@/components/layout/GlobalLayout";
+
 export default function Home() {
-  return <div>Strona główna</div>;
+  return (
+    <GlobalLayout>
+      <div>Strona główna</div>
+    </GlobalLayout>
+  );
 }

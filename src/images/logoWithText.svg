@@ -1,0 +1,31 @@
+<!-- Save as logo-horizontal.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120" role="img" aria-label="Event Marketplace logo">
+  <title>Event Marketplace</title>
+
+  <!-- Icon: calendar + location pin -->
+  <g transform="translate(20,14)">
+    <!-- calendar body -->
+    <rect x="0" y="8" width="80" height="72" rx="10" ry="10" fill="#0ea5e9"/>
+    <!-- calendar header -->
+    <rect x="0" y="0" width="80" height="24" rx="6" ry="6" fill="#0369a1"/>
+    <!-- calendar squares -->
+    <g fill="#ffffff" opacity="0.95">
+      <rect x="10" y="32" width="18" height="14" rx="3"/>
+      <rect x="34" y="32" width="18" height="14" rx="3"/>
+      <rect x="10" y="52" width="18" height="14" rx="3"/>
+      <rect x="34" y="52" width="18" height="14" rx="3"/>
+    </g>
+
+    <!-- location pin overlapping calendar (orange) -->
+    <g transform="translate(50,18)">
+      <path d="M15 0C8.3726 0 3 5.3726 3 12C3 20.25 15 30 15 30C15 30 27 20.25 27 12C27 5.3726 21.6274 0 15 0Z" fill="#fb923c"/>
+      <circle cx="15" cy="12" r="5" fill="#fff"/>
+    </g>
+  </g>
+
+  <!-- Text -->
+  <g transform="translate(120,72)">
+    <text x="0" y="0" font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="32" font-weight="700" fill="white">Event</text>
+    <text x="0" y="36" font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="20" font-weight="600" fill="white">Marketplace</text>
+  </g>
+</svg>
