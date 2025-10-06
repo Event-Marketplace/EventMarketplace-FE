@@ -1,3 +1,10 @@
+import HomeLayout from "@/components/home/HomeLayout";
+import GlobalLayout from "@/components/layout/GlobalLayout";
+
 export default function Home() {
-  return <div>Strona główna</div>;
+  return (
+    <GlobalLayout>
+      <HomeLayout />
+    </GlobalLayout>
+  );
 }
