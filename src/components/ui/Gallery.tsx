@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const CarouselWrapper = styled.div`
@@ -21,7 +21,11 @@ const Image = styled(motion.img)`
   left: 0;
 `;
 
-const Button = styled.button`
+type ButtonProps = {
+  left?: string;
+};
+
+const Button = styled.button<ButtonProps>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -38,15 +42,25 @@ const Button = styled.button`
   &:hover {
     background: rgba(255, 255, 255, 0.9);
   }
+
+  ${(props) => (props.left ? "left:10px" : "right:10px")}
 `;
 
 const Gallery = ({ images }: any) => {
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [index]);
+
   const next = () => setIndex((prev) => (prev + 1) % images.length);
   const prev = () =>
     setIndex((prev) => (prev - 1 + images.length) % images.length);
 
-  console.log("images", images);
   return (
     <CarouselWrapper>
       <AnimatePresence>
@@ -60,8 +74,9 @@ const Gallery = ({ images }: any) => {
           transition={{ duration: 0.5 }}
         />
       </AnimatePresence>
-
-      <Button onClick={prev}>‹</Button>
+      <Button left="true" onClick={prev}>
+        ‹
+      </Button>
       <Button onClick={next}>›</Button>
     </CarouselWrapper>
   );
