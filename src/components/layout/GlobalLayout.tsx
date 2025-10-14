@@ -8,6 +8,7 @@ import fbIcon from "@/images/fb.svg";
 import instaIcon from "@/images/insta.svg";
 import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
+import { useRouter } from "next/navigation";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -76,6 +77,11 @@ type GlobalLayoutProps = {
 };
 
 const GlobalLayout = ({ children }: GlobalLayoutProps) => {
+  const router = useRouter();
+  const handleRegistration = () => {
+    router.push("/register");
+  };
+
   return (
     <>
       <GlobalBox>
@@ -83,7 +89,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
           <Image src={logoIcon} alt="logo" width={70} />
           <HeaderPanelSection>
             <HeaderP>Logowanie</HeaderP>
-            <HeaderP>Rejestracja</HeaderP>
+            <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
           </HeaderPanelSection>
         </GlobalHeader>
         <GlobalContent>{children}</GlobalContent>
