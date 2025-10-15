@@ -59,7 +59,7 @@ const LoginView = () => {
       await apiAxiosClient.post("User/login", body);
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
-        router.push("/home");
+        router.push("/user");
       }, 2000);
     } catch (error: unknown) {
       const err = error as AxiosError<{ error: string }>;
