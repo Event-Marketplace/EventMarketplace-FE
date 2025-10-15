@@ -46,7 +46,11 @@ const Button = styled.button<ButtonProps>`
   ${(props) => (props.left ? "left:10px" : "right:10px")}
 `;
 
-const Gallery = ({ images }: any) => {
+type GalleryProps = {
+  images: string[];
+};
+
+const Gallery = ({ images }: GalleryProps) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
