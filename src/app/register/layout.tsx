@@ -1,8 +1,12 @@
 "use client";
 import styled from "styled-components";
+import bgImage from "@/images/bg.jpg";
+import { Toaster } from "react-hot-toast";
 
 const Layout = styled.div`
-  background-color: #d9d9d9;
+  background-image: url(${bgImage.src});
+  background-size: cover;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -15,5 +19,10 @@ export default function RegisterLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  return (
+    <Layout>
+      <Toaster position="top-center" />
+      {children}
+    </Layout>
+  );
 }
