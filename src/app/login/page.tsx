@@ -1,10 +1,9 @@
-import RegisterView from "@/components/authorization/register/RegisterView";
 import AuthorizationLayout from "@/components/authorization/layout";
 
-export default function Register() {
+export default function LoginPage() {
   return (
     <AuthorizationLayout>
-      <RegisterView />
+      <div></div>
     </AuthorizationLayout>
   );
 }

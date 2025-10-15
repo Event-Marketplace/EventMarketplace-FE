@@ -14,7 +14,7 @@ const Layout = styled.div`
   align-items: center;
 `;
 
-export default function RegisterLayout({
+export default function AuthorizationLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -4,62 +4,19 @@ import styled from "styled-components";
 import logo from "@/images/logoWithText.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import InputEM from "../ui/InputEM";
-import ButtonEM from "../ui/ButtonEM";
+import InputEM from "../../ui/InputEM";
+import ButtonEM from "../../ui/ButtonEM";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
-
-const RegisterCard = styled.div`
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LogoContent = styled.div`
-  background-color: rgba(119, 38, 38, 1);
-  border: 10px solid black;
-  border-right: none;
-  border-radius: 20px 0 0 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  width: 25%;
-  justify-content: center;
-  align-items: center;
-  min-height: 600px;
-
-  img {
-    cursor: pointer;
-  }
-`;
-
-const FormContent = styled.div`
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 10px solid black;
-  border-left: none;
-  border-radius: 0 20px 20px 0;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  align-items: center;
-  min-height: 600px;
-  padding: 20px;
-  color: white;
-`;
-
-const FormTitle = styled.p`
-  font-size: 48px;
-`;
-
-const RegisterForm = styled(Form)`
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
+import {
+  AuthCard,
+  AuthForm,
+  FormContent,
+  FormTitle,
+  LogoContent,
+} from "../CommonStyledComponents";
 
 interface RegisterValues {
   email: string;
@@ -166,7 +123,7 @@ const RegisterView = () => {
   };
 
   return (
-    <RegisterCard>
+    <AuthCard>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <>
           <LogoContent>
@@ -174,7 +131,7 @@ const RegisterView = () => {
           </LogoContent>
           <FormContent>
             <FormTitle>Rejestracja</FormTitle>
-            <RegisterForm>
+            <AuthForm>
               <Field
                 as={InputEM}
                 name="email"
@@ -213,11 +170,11 @@ const RegisterView = () => {
                   tutaj!
                 </a>
               </p>
-            </RegisterForm>
+            </AuthForm>
           </FormContent>
         </>
       </Formik>
-    </RegisterCard>
+    </AuthCard>
   );
 };
 
