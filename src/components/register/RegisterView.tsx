@@ -19,7 +19,7 @@ const RegisterCard = styled.div`
 `;
 
 const LogoContent = styled.div`
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(119, 38, 38, 1);
   border: 10px solid black;
   border-right: none;
   border-radius: 20px 0 0 20px;
@@ -36,7 +36,7 @@ const LogoContent = styled.div`
 `;
 
 const FormContent = styled.div`
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.8);
   border: 10px solid black;
   border-left: none;
   border-radius: 0 20px 20px 0;
