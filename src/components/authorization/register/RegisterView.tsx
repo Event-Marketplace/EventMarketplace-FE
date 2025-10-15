@@ -30,25 +30,6 @@ interface ErrorFlags {
   confirmPassword: boolean;
 }
 
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Nieprawidłowy email")
-    .required("Email jest wymagany"),
-
-  password: Yup.string()
-    .min(8, "Hasło musi mieć minimum 8 znaków")
-    .matches(
-      /(?=.*[A-Z])/,
-      "Hasło musi zawierać przynajmniej jedną wielką literę"
-    )
-    .matches(/(?=.*\d)/, "Hasło musi zawierać przynajmniej jedną cyfrę")
-    .required("Hasło jest wymagane"),
-
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Hasła muszą się zgadzać")
-    .required("Powtórz hasło"),
-});
-
 const RegisterView = () => {
   const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -71,7 +52,6 @@ const RegisterView = () => {
   };
 
   const handleSubmit = async (values: RegisterValues) => {
-    console.log("Dane formularza:", values);
     const newErrors = { ...errors };
 
     if (!values.email || !values.email.match(emailRegex)) {
@@ -110,7 +90,6 @@ const RegisterView = () => {
     };
 
     try {
-      console.log("data", values);
       await apiAxiosClient.post("User/register", body);
       toast.success("Rejestracja zakończona sukcesem!");
       setTimeout(() => {
@@ -166,7 +145,7 @@ const RegisterView = () => {
               />
               <p>
                 Posiadasz już konto? Zaloguj się{" "}
-                <a href="/home" style={{ textDecorationColor: "blue" }}>
+                <a href="/login" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>

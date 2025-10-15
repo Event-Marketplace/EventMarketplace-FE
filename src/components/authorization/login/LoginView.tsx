@@ -1,3 +1,5 @@
+"use client";
+
 import { Field, Formik } from "formik";
 import {
   AuthCard,
@@ -9,17 +11,65 @@ import {
 import ButtonEM from "@/components/ui/ButtonEM";
 import InputEM from "@/components/ui/InputEM";
 import Image from "next/image";
-import logo from "@/images/logo.svg";
+import logo from "@/images/logoWithText.svg";
 import { useRouter } from "next/navigation";
+import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import toast from "react-hot-toast";
+
+interface LoginValues {
+  email: string;
+  password: string;
+}
 
 const LoginView = () => {
   const router = useRouter();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
   const handleHomePage = () => {
     router.push("/home");
   };
 
-  const handleSubmit = (values: any) => {
-    console.log("data", values);
+  const errors = {
+    email: false,
+  };
+
+  const handleSubmit = async (values: any) => {
+    const newErrors = { ...errors };
+
+    if (!values.email || !values.email.match(emailRegex)) {
+      toast.error("Nieprawidłowy email.");
+      newErrors.email = true;
+    } else {
+      newErrors.email = false;
+    }
+
+    if (newErrors.email) {
+      return;
+    }
+
+    const body = {
+      dto: {
+        email: values.email,
+        password: values.password,
+      },
+    };
+
+    try {
+      await apiAxiosClient.post("User/login", body);
+      toast.success("Zostałeś poprawnie zalogowany.");
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } catch (error: any) {
+      const message = error?.response?.data?.error;
+      toast.error(message);
+    }
+  };
+
+  const initialValues: LoginValues = {
+    email: "",
+    password: "",
   };
 
   return (
@@ -30,7 +80,7 @@ const LoginView = () => {
             <Image src={logo} alt="logo" onClick={handleHomePage} />
           </LogoContent>
           <FormContent>
-            <FormTitle>Rejestracja</FormTitle>
+            <FormTitle>Logowanie</FormTitle>
             <AuthForm>
               <Field
                 as={InputEM}
@@ -49,7 +99,7 @@ const LoginView = () => {
               <ButtonEM
                 type="submit"
                 kind="primary"
-                text="Zarejestruj się"
+                text="Zaloguj się"
                 width={300}
                 style={{
                   padding: "20px",
@@ -58,8 +108,8 @@ const LoginView = () => {
                 }}
               />
               <p>
-                Posiadasz już konto? Zaloguj się{" "}
-                <a href="/home" style={{ textDecorationColor: "blue" }}>
+                Nie posiadasz konta? Zarejestruj się{" "}
+                <a href="/register" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>

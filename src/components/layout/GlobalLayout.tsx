@@ -82,13 +82,17 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/register");
   };
 
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
   return (
     <>
       <GlobalBox>
         <GlobalHeader>
           <Image src={logoIcon} alt="logo" width={70} />
           <HeaderPanelSection>
-            <HeaderP>Logowanie</HeaderP>
+            <HeaderP onClick={handleLogin}>Logowanie</HeaderP>
             <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
           </HeaderPanelSection>
         </GlobalHeader>

@@ -21,8 +21,10 @@ export default function AuthorizationLayout({
 }) {
   return (
     <Layout>
-      <Toaster position="top-center" />
-      {children}
+      <>
+        <Toaster position="top-center" />
+        {children}
+      </>
     </Layout>
   );
 }

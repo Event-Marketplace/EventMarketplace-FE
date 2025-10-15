@@ -42,6 +42,8 @@ export const FormContent = styled.div`
 
 export const FormTitle = styled.p`
   font-size: 48px;
+  font-style: italic;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const AuthForm = styled(Form)`
