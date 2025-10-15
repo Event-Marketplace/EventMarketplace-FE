@@ -1,7 +1,9 @@
 "use client";
+
 import styled from "styled-components";
 import bgImage from "@/images/bg.jpg";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
 
 const Layout = styled.div`
   background-image: url(${bgImage.src});
@@ -19,12 +21,23 @@ export default function AuthorizationLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => {
+      toast.dismiss(); // zamyka wszystkie toasty przy opuszczeniu strony
+    };
+  }, []);
+
+  // dopóki komponent nie zhydratuje, pokaż np. czarne tło
+  if (!isMounted) {
+    return <Layout />;
+  }
+
   return (
     <Layout>
-      <>
-        <Toaster position="top-center" />
-        {children}
-      </>
+      <>{children}</>
     </Layout>
   );
 }

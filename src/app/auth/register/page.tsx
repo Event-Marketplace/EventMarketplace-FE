@@ -1,5 +1,5 @@
 import RegisterView from "@/components/authorization/register/RegisterView";
-import AuthorizationLayout from "@/components/authorization/layout";
+import AuthorizationLayout from "@/app/auth/layout";
 
 export default function Register() {
   return (

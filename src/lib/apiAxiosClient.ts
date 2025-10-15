@@ -12,10 +12,3 @@ apiAxiosClient.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
-
-apiAxiosClient.interceptors.response.use((response) => 
-    response.data, (error) => {
-      console.error("API error:", error.response?.status, error.message);
-      return Promise.reject(error);
-    }
-  );

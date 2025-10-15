@@ -15,6 +15,7 @@ import logo from "@/images/logoWithText.svg";
 import { useRouter } from "next/navigation";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
 interface LoginValues {
   email: string;
@@ -24,7 +25,6 @@ interface LoginValues {
 const LoginView = () => {
   const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const handleHomePage = () => {
     router.push("/home");
@@ -34,7 +34,7 @@ const LoginView = () => {
     email: false,
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: LoginValues) => {
     const newErrors = { ...errors };
 
     if (!values.email || !values.email.match(emailRegex)) {
@@ -59,10 +59,12 @@ const LoginView = () => {
       await apiAxiosClient.post("User/login", body);
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
-        router.push("/");
+        router.push("/home");
       }, 2000);
-    } catch (error: any) {
-      const message = error?.response?.data?.error;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ error: string }>;
+      const message =
+        err?.response?.data?.error || "Wystąpił błąd na serwerze.";
       toast.error(message);
     }
   };
@@ -109,7 +111,10 @@ const LoginView = () => {
               />
               <p>
                 Nie posiadasz konta? Zarejestruj się{" "}
-                <a href="/register" style={{ textDecorationColor: "blue" }}>
+                <a
+                  href="/auth/register"
+                  style={{ textDecorationColor: "blue" }}
+                >
                   tutaj!
                 </a>
               </p>

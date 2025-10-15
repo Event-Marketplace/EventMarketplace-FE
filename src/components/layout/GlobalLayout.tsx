@@ -9,6 +9,7 @@ import instaIcon from "@/images/insta.svg";
 import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -77,13 +78,24 @@ type GlobalLayoutProps = {
 };
 
 const GlobalLayout = ({ children }: GlobalLayoutProps) => {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // dopóki komponent nie zhydratuje, pokaż np. czarne tło
+  if (!isMounted) {
+    return <GlobalBox />;
+  }
+
   const handleRegistration = () => {
-    router.push("/register");
+    router.push("/auth/register");
   };
 
   const handleLogin = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (

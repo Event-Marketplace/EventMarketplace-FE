@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import InputEM from "../../ui/InputEM";
 import ButtonEM from "../../ui/ButtonEM";
 import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import {
@@ -17,6 +16,7 @@ import {
   FormTitle,
   LogoContent,
 } from "../CommonStyledComponents";
+import { AxiosError } from "axios";
 
 interface RegisterValues {
   email: string;
@@ -95,8 +95,10 @@ const RegisterView = () => {
       setTimeout(() => {
         router.push("/home");
       }, 2000);
-    } catch (error: any) {
-      const message = error?.response?.data?.error;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ error: string }>;
+      const message =
+        err?.response?.data?.error || "Wystąpił błąd na serwerze.";
       toast.error(message);
     }
   };
@@ -145,7 +147,7 @@ const RegisterView = () => {
               />
               <p>
                 Posiadasz już konto? Zaloguj się{" "}
-                <a href="/login" style={{ textDecorationColor: "blue" }}>
+                <a href="/auth/login" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>
