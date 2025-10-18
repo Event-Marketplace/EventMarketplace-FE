@@ -9,6 +9,7 @@ import instaIcon from "@/images/insta.svg";
 import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -41,6 +42,7 @@ const HeaderP = styled.p`
     cursor: pointer;
     background-color: white;
     color: #772626;
+    border-radius: 5px;
   }
 `;
 
@@ -77,18 +79,35 @@ type GlobalLayoutProps = {
 };
 
 const GlobalLayout = ({ children }: GlobalLayoutProps) => {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // dopóki komponent nie zhydratuje, pokaż np. czarne tło
+  if (!isMounted) {
+    return <GlobalBox />;
+  }
+
   const handleRegistration = () => {
-    router.push("/register");
+    router.push("/auth/register");
+  };
+
+  const handleLogin = () => {
+    router.push("/auth/login");
   };
 
   return (
     <>
       <GlobalBox>
         <GlobalHeader>
-          <Image src={logoIcon} alt="logo" width={70} />
+          <Image src={logoWithTextIcon} alt="logo" width={150} />
           <HeaderPanelSection>
-            <HeaderP>Logowanie</HeaderP>
+            <HeaderP onClick={handleLogin}>Wyszukaj wydarzenie</HeaderP>
+            <HeaderP onClick={handleLogin}>O nas</HeaderP>
+            <HeaderP onClick={handleLogin}>Logowanie</HeaderP>
             <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
           </HeaderPanelSection>
         </GlobalHeader>

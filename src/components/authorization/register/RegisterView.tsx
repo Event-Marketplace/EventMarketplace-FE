@@ -4,62 +4,19 @@ import styled from "styled-components";
 import logo from "@/images/logoWithText.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import InputEM from "../ui/InputEM";
-import ButtonEM from "../ui/ButtonEM";
+import InputEM from "../../ui/InputEM";
+import ButtonEM from "../../ui/ButtonEM";
 import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
-
-const RegisterCard = styled.div`
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LogoContent = styled.div`
-  background-color: rgba(119, 38, 38, 1);
-  border: 10px solid black;
-  border-right: none;
-  border-radius: 20px 0 0 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  width: 25%;
-  justify-content: center;
-  align-items: center;
-  min-height: 600px;
-
-  img {
-    cursor: pointer;
-  }
-`;
-
-const FormContent = styled.div`
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 10px solid black;
-  border-left: none;
-  border-radius: 0 20px 20px 0;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  align-items: center;
-  min-height: 600px;
-  padding: 20px;
-  color: white;
-`;
-
-const FormTitle = styled.p`
-  font-size: 48px;
-`;
-
-const RegisterForm = styled(Form)`
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
+import {
+  AuthCard,
+  AuthForm,
+  FormContent,
+  FormTitle,
+  LogoContent,
+} from "../CommonStyledComponents";
+import { AxiosError } from "axios";
 
 interface RegisterValues {
   email: string;
@@ -72,25 +29,6 @@ interface ErrorFlags {
   password: boolean;
   confirmPassword: boolean;
 }
-
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Nieprawidłowy email")
-    .required("Email jest wymagany"),
-
-  password: Yup.string()
-    .min(8, "Hasło musi mieć minimum 8 znaków")
-    .matches(
-      /(?=.*[A-Z])/,
-      "Hasło musi zawierać przynajmniej jedną wielką literę"
-    )
-    .matches(/(?=.*\d)/, "Hasło musi zawierać przynajmniej jedną cyfrę")
-    .required("Hasło jest wymagane"),
-
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Hasła muszą się zgadzać")
-    .required("Powtórz hasło"),
-});
 
 const RegisterView = () => {
   const router = useRouter();
@@ -114,7 +52,6 @@ const RegisterView = () => {
   };
 
   const handleSubmit = async (values: RegisterValues) => {
-    console.log("Dane formularza:", values);
     const newErrors = { ...errors };
 
     if (!values.email || !values.email.match(emailRegex)) {
@@ -153,20 +90,21 @@ const RegisterView = () => {
     };
 
     try {
-      console.log("data", values);
       await apiAxiosClient.post("User/register", body);
       toast.success("Rejestracja zakończona sukcesem!");
       setTimeout(() => {
         router.push("/home");
       }, 2000);
-    } catch (error: any) {
-      const message = error?.response?.data?.error;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ error: string }>;
+      const message =
+        err?.response?.data?.error || "Wystąpił błąd na serwerze.";
       toast.error(message);
     }
   };
 
   return (
-    <RegisterCard>
+    <AuthCard>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <>
           <LogoContent>
@@ -174,7 +112,7 @@ const RegisterView = () => {
           </LogoContent>
           <FormContent>
             <FormTitle>Rejestracja</FormTitle>
-            <RegisterForm>
+            <AuthForm>
               <Field
                 as={InputEM}
                 name="email"
@@ -209,15 +147,15 @@ const RegisterView = () => {
               />
               <p>
                 Posiadasz już konto? Zaloguj się{" "}
-                <a href="/home" style={{ textDecorationColor: "blue" }}>
+                <a href="/auth/login" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>
-            </RegisterForm>
+            </AuthForm>
           </FormContent>
         </>
       </Formik>
-    </RegisterCard>
+    </AuthCard>
   );
 };
 
