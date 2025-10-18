@@ -2,14 +2,23 @@
 
 import styled from "styled-components";
 import Image from "next/image";
-import concertImg from "@/images/koncert.jpg";
-import carImg from "@/images/zlot-samochodowy.jpg";
-import marathonImg from "@/images/maraton.jpg";
 import concerBgImg from "@/images/bg.jpg";
 import Gallery from "../ui/Gallery";
 import { useEffect } from "react";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import { getTest } from "@/api/getTest";
+
+import es1 from "@/images/events/motocros.jpg";
+import es2 from "@/images/events/nascar.jpg";
+import es3 from "@/images/events/snowEvents.jpg";
+import es4 from "@/images/zlot-samochodowy.jpg";
+import es5 from "@/images/maraton.jpg";
+
+import eo1 from "@/images/events/audience.jpg";
+import eo2 from "@/images/events/audience2.jpg";
+import eo3 from "@/images/events/drinks.jpg";
+import eo4 from "@/images/events/weeding.jpg";
+import eo5 from "@/images/koncert.jpg";
 
 const HomeBox = styled.div`
   width: 100%;
@@ -87,7 +96,8 @@ const InfoContent2 = styled.div`
 `;
 
 const HomeLayout = () => {
-  const photos = [carImg.src, concertImg.src, marathonImg.src];
+  const sportPhotos = [es1.src, es2.src, es3.src, es4.src, es5.src];
+  const otherPhotos = [eo1.src, eo2.src, eo3.src, eo4.src, eo5.src];
 
   const fetchData = async () => {
     const response = await getTest();
@@ -108,7 +118,8 @@ const HomeLayout = () => {
           </SecondTitle>
         </HeroSection>
         <ImagesSection>
-          <Gallery images={photos} />
+          <Gallery images={sportPhotos} />
+          <Gallery images={otherPhotos} />
         </ImagesSection>
         <InfoContent>
           <p>Witaj w Evently — Twoim centrum wydarzeń</p>

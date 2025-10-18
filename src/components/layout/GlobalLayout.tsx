@@ -42,6 +42,7 @@ const HeaderP = styled.p`
     cursor: pointer;
     background-color: white;
     color: #772626;
+    border-radius: 5px;
   }
 `;
 
@@ -102,8 +103,10 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     <>
       <GlobalBox>
         <GlobalHeader>
-          <Image src={logoIcon} alt="logo" width={70} />
+          <Image src={logoWithTextIcon} alt="logo" width={150} />
           <HeaderPanelSection>
+            <HeaderP onClick={handleLogin}>Wyszukaj wydarzenie</HeaderP>
+            <HeaderP onClick={handleLogin}>O nas</HeaderP>
             <HeaderP onClick={handleLogin}>Logowanie</HeaderP>
             <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
           </HeaderPanelSection>
