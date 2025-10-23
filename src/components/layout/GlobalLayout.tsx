@@ -10,6 +10,7 @@ import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { breakpoints } from "@/styles/breakpoints";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -52,6 +53,10 @@ const GlobalContent = styled.div`
   min-height: calc(100vh - 483px);
   z-index: 1;
   padding: 50px;
+
+  @media (max-width: ${breakpoints.laptop}) {
+    padding: 2vw;
+  }
 `;
 
 const GlobalFooter = styled.div`
@@ -72,6 +77,25 @@ const FooterInformationSection = styled.footer`
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  @media (max-width: ${breakpoints.laptopL}) {
+    flex-direction: column;
+    text-align: center;
+    gap: 3vh;
+  }
+`;
+
+const LogoWrapper = styled.div`
+  width: 200px;
+  height: auto;
+
+  @media (max-width: ${breakpoints.laptop}) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  position: relative;
 `;
 
 type GlobalLayoutProps = {
@@ -113,7 +137,9 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
         </GlobalHeader>
         <GlobalContent>{children}</GlobalContent>
         <GlobalFooter>
-          <Image src={logoWithTextIcon} alt="logo z tekstem" />
+          <LogoWrapper>
+            <Image src={logoWithTextIcon} alt="logo z tekstem" />
+          </LogoWrapper>
           <FooterInformationSection>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "20px" }}
