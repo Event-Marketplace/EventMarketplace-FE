@@ -4,6 +4,7 @@ import { Field, Formik } from "formik";
 import {
   AuthCard,
   AuthForm,
+  ContentWrapper,
   FormContent,
   FormTitle,
   LogoContent,

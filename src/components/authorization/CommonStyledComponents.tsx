@@ -1,4 +1,6 @@
+import { breakpoints } from "@/styles/breakpoints";
 import { Form } from "formik";
+import { b } from "framer-motion/client";
 import styled from "styled-components";
 
 export const AuthCard = styled.div`
@@ -6,6 +8,17 @@ export const AuthCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: ${breakpoints.laptopL}) {
+    width: 90%;
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10vw;
 `;
 
 export const LogoContent = styled.div`
@@ -23,6 +36,14 @@ export const LogoContent = styled.div`
   img {
     cursor: pointer;
   }
+
+  @media (max-width: ${breakpoints.laptop}) {
+    flex: 1;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: none;
+  }
 `;
 
 export const FormContent = styled.div`
@@ -38,6 +59,17 @@ export const FormContent = styled.div`
   min-height: 600px;
   padding: 20px;
   color: white;
+
+  @media (max-width: ${breakpoints.laptop}) {
+    flex: 1;
+  }
+
+  @media (max-width: ${breakpoints.mobileM}) {
+    height: auto;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+  }
 `;
 
 export const FormTitle = styled.p`
@@ -51,4 +83,17 @@ export const AuthForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  @media (max-width: ${breakpoints.mobileM}) {
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 250px;
+    }
+
+    button {
+      width: 250px;
+    }
+  }
 `;
