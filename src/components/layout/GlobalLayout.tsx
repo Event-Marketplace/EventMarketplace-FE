@@ -18,7 +18,7 @@ const GlobalBox = styled.div`
   height: 100vh;
 `;
 
-const GlobalHeader = styled.div`
+const GlobalHeader = styled.header`
   background-color: #772626;
   height: 100px;
   display: flex;
@@ -32,7 +32,7 @@ const GlobalHeader = styled.div`
   color: white;
 `;
 
-const HeaderPanelSection = styled.div`
+const HeaderPanelSection = styled.nav`
   display: flex;
   gap: 20px;
   font-size: 22px;
@@ -56,7 +56,7 @@ const HeaderPanelMenu = styled.div`
   }
 `;
 
-const HeaderP = styled.p`
+const HeaderLink = styled.a`
   padding: 10px 20px;
 
   &:hover {
@@ -77,7 +77,7 @@ const GlobalContent = styled.div`
   position: relative;
 `;
 
-const GlobalFooter = styled.div`
+const GlobalFooter = styled.footer`
   background-color: #772626;
   height: auto;
   display: flex;
@@ -117,7 +117,7 @@ const LogoWrapper = styled.div`
   position: relative;
 `;
 
-const MobileMenu = styled.div`
+const MobileMenu = styled.nav`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -183,18 +183,18 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
             />
           </HeaderPanelMenu>
           {isMenuOpen && (
-            <MobileMenu>
-              <HeaderP onClick={handleLogin}>Wyszukaj wydarzenie</HeaderP>
-              <HeaderP onClick={handleLogin}>O nas</HeaderP>
-              <HeaderP onClick={handleLogin}>Logowanie</HeaderP>
-              <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
+            <MobileMenu aria-label="Mobilne menu nawigacyjne">
+              <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+              <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
+              <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
+              <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
             </MobileMenu>
           )}
-          <HeaderPanelSection>
-            <HeaderP onClick={handleLogin}>Wyszukaj wydarzenie</HeaderP>
-            <HeaderP onClick={handleLogin}>O nas</HeaderP>
-            <HeaderP onClick={handleLogin}>Logowanie</HeaderP>
-            <HeaderP onClick={handleRegistration}>Rejestracja</HeaderP>
+          <HeaderPanelSection aria-label="Główne menu nawigacyjne">
+            <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+            <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
+            <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
+            <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
           </HeaderPanelSection>
         </GlobalHeader>
         <GlobalContent>{children}</GlobalContent>

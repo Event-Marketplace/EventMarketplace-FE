@@ -46,6 +46,14 @@ export const LogoContent = styled.div`
   }
 `;
 
+export const MobileLogoContent = styled.div`
+  display: none;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: flex;
+  }
+`;
+
 export const FormContent = styled.div`
   background-color: rgba(0, 0, 0, 0.8);
   border: 10px solid black;
@@ -83,6 +91,10 @@ export const AuthForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin-top: 50px;
+  }
 
   @media (max-width: ${breakpoints.mobileM}) {
     display: flex;

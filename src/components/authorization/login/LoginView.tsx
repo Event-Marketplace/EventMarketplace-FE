@@ -8,6 +8,7 @@ import {
   FormContent,
   FormTitle,
   LogoContent,
+  MobileLogoContent,
 } from "../CommonStyledComponents";
 import ButtonEM from "@/components/ui/ButtonEM";
 import InputEM from "@/components/ui/InputEM";
@@ -83,6 +84,9 @@ const LoginView = () => {
             <Image src={logo} alt="logo" onClick={handleHomePage} />
           </LogoContent>
           <FormContent>
+            <MobileLogoContent>
+              <Image src={logo} alt="logo" onClick={handleHomePage} />
+            </MobileLogoContent>
             <FormTitle>Logowanie</FormTitle>
             <AuthForm>
               <Field
