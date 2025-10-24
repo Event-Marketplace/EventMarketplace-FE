@@ -7,6 +7,7 @@ import Gallery from "../ui/Gallery";
 import { useEffect } from "react";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import { getTest } from "@/api/getTest";
+import { breakpoints } from "@/styles/breakpoints";
 
 import es1 from "@/images/events/motocros.jpg";
 import es2 from "@/images/events/nascar.jpg";
@@ -34,7 +35,7 @@ const HeroSection = styled.div<{ bg: string }>`
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 5%;
   width: 100vw;
   background-color: #faf7f5;
   padding: 100px 0;
@@ -55,11 +56,21 @@ const HeroSection = styled.div<{ bg: string }>`
     position: relative;
     z-index: 1; // tekst i inne elementy nad overlay
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 8vh 5vw;
+    text-align: center;
+    margin-top: 2vh;
+  }
 `;
 
 const Title = styled.h1`
   font-style: italic;
   font-size: 42px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 24px;
+  }
 `;
 
 const SecondTitle = styled.h3`
@@ -76,12 +87,31 @@ const InfoContent = styled.div`
   background-color: #f2b705;
   padding: 120px 50px;
   font-family: "Montserrat", sans-serif;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 18px;
+    padding: 8vh 6vw;
+  }
 `;
 
 const ImagesSection = styled.div`
   width: 100%;
   display: flex;
-  min-height: 400px;
+  min-height: 40vh;
+  gap: 2vw;
+
+  @media (max-width: ${breakpoints.laptopL}) {
+    flex-wrap: wrap;
+    min-height: 80vh;
+    gap: 3vh;
+    width: 90%;
+  }
+
+  @media (min-width: ${breakpoints.desktop}) {
+    flex-wrap: no-wprap;
+    min-height: 30vh;
+    width: 50%;
+  }
 `;
 
 const InfoContent2 = styled.div`
@@ -93,6 +123,15 @@ const InfoContent2 = styled.div`
   font-size: 22px;
   background-color: #faf7f5;
   padding: 50px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 15px;
+    padding: 2vw 1vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    background-color: white;
+    text-align: center;
+  }
 `;
 
 const HomeLayout = () => {

@@ -15,6 +15,7 @@ import {
   FormContent,
   FormTitle,
   LogoContent,
+  MobileLogoContent,
 } from "../CommonStyledComponents";
 import { AxiosError } from "axios";
 
@@ -111,6 +112,9 @@ const RegisterView = () => {
             <Image src={logo} alt="logo" onClick={handleHomePage} />
           </LogoContent>
           <FormContent>
+            <MobileLogoContent>
+              <Image src={logo} alt="logo" onClick={handleHomePage} />
+            </MobileLogoContent>
             <FormTitle>Rejestracja</FormTitle>
             <AuthForm>
               <Field
