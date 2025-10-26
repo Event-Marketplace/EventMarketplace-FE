@@ -169,6 +169,10 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/auth/login");
   };
 
+  const handleEventList = () => {
+    router.push("/event-pub");
+  };
+
   return (
     <>
       <GlobalBox>
@@ -184,14 +188,18 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
           </HeaderPanelMenu>
           {isMenuOpen && (
             <MobileMenu aria-label="Mobilne menu nawigacyjne">
-              <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+              <HeaderLink onClick={handleEventList}>
+                Wyszukaj wydarzenie
+              </HeaderLink>
               <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
               <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
               <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
             </MobileMenu>
           )}
           <HeaderPanelSection aria-label="Główne menu nawigacyjne">
-            <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+            <HeaderLink onClick={handleEventList}>
+              Wyszukaj wydarzenie
+            </HeaderLink>
             <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
             <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
             <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
