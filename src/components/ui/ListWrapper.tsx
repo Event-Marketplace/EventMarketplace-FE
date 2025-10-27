@@ -1,18 +1,45 @@
 "use client";
 
 import React from "react";
+import Pagination from "./Pagination";
 
-type ListWrapperProps = {
-  children: React.ReactNode;
+type ListData<T> = {
+  items: T[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
 };
 
-const ListWrapper = ({ children }: ListWrapperProps) => {
+type ListWrapperProps<T> = {
+  children: React.ReactNode;
+  data: ListData<T>;
+  onPageChange: (page: number) => void;
+};
+
+const ListWrapper = <T,>({
+  children,
+  data,
+  onPageChange,
+}: ListWrapperProps<T>) => {
+  const handleChangePage = () => {};
   return (
     <div className="p-8 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
       <div className="bg-white p-5 shadow-md">filters</div>
-      <div className="flex gap-5 justify-end p-2">up pagination</div>
+      <Pagination
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
+        totalCount={data.totalCount}
+        onPageChange={onPageChange}
+        className="flex gap-5 justify-end p-2"
+      />
       <div>{children}</div>
-      <div className="flex gap-5 justify-end p-2">down pagination</div>
+      <Pagination
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
+        totalCount={data.totalCount}
+        onPageChange={onPageChange}
+        className="flex gap-5 justify-end p-2"
+      />
     </div>
   );
 };

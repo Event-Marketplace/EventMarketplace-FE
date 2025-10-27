@@ -21,11 +21,12 @@ interface EventResponse {
 const EventList = () => {
   const [eventList, setEventList] = useState<EventResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await apiAxiosClient.get("Event");
+        let response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
         console.log("res", response.data);
         setEventList(response.data);
       } catch (error) {
@@ -36,7 +37,11 @@ const EventList = () => {
     };
 
     fetchData();
-  }, []);
+  }, [page]);
+
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
 
   //   async function fetchEvents() {
   //     try {
@@ -59,7 +64,15 @@ const EventList = () => {
         <h1 className="text-4xl font-sans font-medium italic leading-relaxed text-center mb-3">
           Lista nadchodzących wydarzeń
         </h1>
-        <ListWrapper>
+        <ListWrapper
+          data={{
+            items: eventList.events,
+            totalCount: eventList.totalCount,
+            totalPages: Math.ceil(eventList.totalCount / 2),
+            currentPage: page,
+          }}
+          onPageChange={handleChangePage}
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
             {eventList.events.map((event) => (
               <EventCard key={event.id} event={event} />
