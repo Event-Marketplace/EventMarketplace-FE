@@ -68,7 +68,7 @@ const EventList = () => {
           data={{
             items: eventList.events,
             totalCount: eventList.totalCount,
-            totalPages: Math.ceil(eventList.totalCount / 2),
+            totalPages: Math.ceil(eventList.totalCount / 9),
             currentPage: page,
           }}
           onPageChange={handleChangePage}

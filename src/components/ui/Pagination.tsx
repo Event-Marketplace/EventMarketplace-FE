@@ -5,6 +5,7 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   totalCount: number;
+  visibleTotalCount?: boolean;
   onPageChange: (page: number) => void;
   className?: string;
 };
@@ -15,6 +16,7 @@ const Pagination = ({
   totalCount,
   onPageChange,
   className,
+  visibleTotalCount = false,
 }: PaginationProps) => {
   const handlePrev = () => {
     if (currentPage > 1) {
@@ -29,6 +31,7 @@ const Pagination = ({
 
   return (
     <div className={`flex items-center justify-end gap-3 p-2 ${className}`}>
+      {visibleTotalCount && <span>Ilość wydarzeń: {totalCount}</span>}
       <Button
         variant="outline"
         size="sm"

@@ -21,7 +21,6 @@ const ListWrapper = <T,>({
   data,
   onPageChange,
 }: ListWrapperProps<T>) => {
-  const handleChangePage = () => {};
   return (
     <div className="p-8 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
       <div className="bg-white p-5 shadow-md">filters</div>
