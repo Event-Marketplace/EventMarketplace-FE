@@ -17,7 +17,7 @@ interface Event {
 
 export function EventCard({ event }: { event: Event }) {
   return (
-    <Card className="bg-blue-50 border border-blue-200 overflow-hidden shadow-md hover:shadow-lg transition">
+    <Card className="bg-blue-50 border border-blue-200 hover:border-blue-500 overflow-hidden shadow-md hover:shadow-lg transition">
       <img
         src={event.imageUrl}
         alt={event.title}

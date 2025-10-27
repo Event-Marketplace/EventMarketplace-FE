@@ -143,6 +143,12 @@ const MobileMenu = styled.nav`
   }
 `;
 
+const LogoClicked = styled(Image)`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 type GlobalLayoutProps = {
   children: React.ReactNode;
 };
@@ -173,11 +179,20 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/event-pub");
   };
 
+  const handleHome = () => {
+    router.push("/home");
+  };
+
   return (
     <>
       <GlobalBox>
         <GlobalHeader>
-          <Image src={logoWithTextIcon} alt="logo" width={150} />
+          <LogoClicked
+            src={logoWithTextIcon}
+            alt="logo"
+            width={150}
+            onClick={handleHome}
+          />
           <HeaderPanelMenu>
             <Image
               src={burgerIcon}

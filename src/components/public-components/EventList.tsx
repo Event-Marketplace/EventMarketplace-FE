@@ -3,6 +3,7 @@
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import { useEffect, useState } from "react";
 import { EventCard } from "./EventCard";
+import ListWrapper from "../ui/ListWrapper";
 
 interface Event {
   id: string;
@@ -54,11 +55,18 @@ const EventList = () => {
 
   if (eventList) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-        {eventList.events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
+      <>
+        <h1 className="text-4xl font-sans font-medium italic leading-relaxed text-center mb-3">
+          Lista nadchodzących wydarzeń
+        </h1>
+        <ListWrapper>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+            {eventList.events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        </ListWrapper>
+      </>
     );
   }
 };
