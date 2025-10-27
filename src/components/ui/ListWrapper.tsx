@@ -14,16 +14,22 @@ type ListWrapperProps<T> = {
   children: React.ReactNode;
   data: ListData<T>;
   onPageChange: (page: number) => void;
+  filters?: React.ReactNode;
 };
 
 const ListWrapper = <T,>({
   children,
   data,
   onPageChange,
+  filters,
 }: ListWrapperProps<T>) => {
   return (
     <div className="p-8 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
-      <div className="bg-white p-5 shadow-md">filters</div>
+      {filters && (
+        <div className="flex flex-column gap-5 bg-white p-5 shadow-md">
+          {filters}
+        </div>
+      )}
       <Pagination
         currentPage={data.currentPage}
         totalPages={data.totalPages}

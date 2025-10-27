@@ -4,6 +4,7 @@ import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import { useEffect, useState } from "react";
 import { EventCard } from "./EventCard";
 import ListWrapper from "../ui/ListWrapper";
+import EventFilters from "./EventFilters";
 
 interface Event {
   id: string;
@@ -22,6 +23,13 @@ const EventList = () => {
   const [eventList, setEventList] = useState<EventResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({
+    title: "",
+    startDate: "",
+    endDate: "",
+    startDate2: "",
+    endDate2: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +51,18 @@ const EventList = () => {
     setPage(newPage);
   };
 
+  const handleFilter = async (newFilters: any) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+    try {
+      let response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
+      setPage(1);
+      setEventList(response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   //   async function fetchEvents() {
   //     try {
   //       const res = await fetch("https://twoj-backend-url/api/events")
@@ -72,6 +92,7 @@ const EventList = () => {
             currentPage: page,
           }}
           onPageChange={handleChangePage}
+          filters={<EventFilters onChange={handleFilter} />}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
             {eventList.events.map((event) => (
