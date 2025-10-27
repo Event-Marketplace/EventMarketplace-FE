@@ -33,7 +33,7 @@ export function EventCard({ event }: { event: Event }) {
         <p className="text-sm text-gray-600">📍 {event.location}</p>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full hover:cursor-pointer">
           Zobacz więcej
         </Button>
       </CardFooter>
