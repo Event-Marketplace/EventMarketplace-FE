@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { EventCard } from "./EventCard";
 import ListWrapper from "../ui/ListWrapper";
 import EventFilters from "./EventFilters";
+import { title } from "process";
 
 interface Event {
   id: string;
   title: string;
-  date: string;
+  startDate: string;
+  endDate: string;
   location: string;
   imageUrl: string;
 }
@@ -27,15 +29,14 @@ const EventList = () => {
     title: "",
     startDate: "",
     endDate: "",
-    startDate2: "",
-    endDate2: "",
+    startPrice: 0,
+    endPrice: 0,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
-        console.log("res", response.data);
+        const response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
         setEventList(response.data);
       } catch (error) {
         console.error(error);
@@ -52,9 +53,19 @@ const EventList = () => {
   };
 
   const handleFilter = async (newFilters: any) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...newFilters }));
+    console.log("filters", newFilters);
     try {
-      let response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
+      const response = await apiAxiosClient.get(`Event`, {
+        params: {
+          pageNumber: 1,
+          title: newFilters.title || "",
+          startDate: newFilters.startDate || "",
+          endDate: newFilters.endDate || "",
+          startPrice: newFilters.startPrice || "",
+          endPrice: newFilters.endPrice || "",
+        },
+      });
       setPage(1);
       setEventList(response.data);
     } catch (error) {
@@ -63,6 +74,7 @@ const EventList = () => {
       setLoading(false);
     }
   };
+
   //   async function fetchEvents() {
   //     try {
   //       const res = await fetch("https://twoj-backend-url/api/events")
@@ -92,7 +104,20 @@ const EventList = () => {
             currentPage: page,
           }}
           onPageChange={handleChangePage}
-          filters={<EventFilters onChange={handleFilter} />}
+          filters={
+            <EventFilters
+              onChange={handleFilter}
+              onClear={() =>
+                handleFilter({
+                  title: "",
+                  startDate: "",
+                  endDate: "",
+                  startPrice: "",
+                  endPrice: "",
+                })
+              }
+            />
+          }
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
             {eventList.events.map((event) => (

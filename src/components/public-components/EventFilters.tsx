@@ -7,20 +7,25 @@ type EventFilterProps = {
     title?: string;
     startDate?: string;
     endDate?: string;
-    startDate2?: string;
-    endDate2?: string;
+    startPrice?: number | "";
+    endPrice?: number | "";
   }) => void;
+  onClear: () => void;
 };
 
-const EventFilters = ({ onChange }: EventFilterProps) => {
+const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [startDate2, setStartDate2] = useState("");
-  const [endDate2, setEndDate2] = useState("");
+  const [startPrice, setStartPrice] = useState<number | "">("");
+  const [endPrice, setEndPrice] = useState<number | "">("");
 
   const handleApply = () => {
-    onChange({ title, startDate, endDate, startDate2, endDate2 });
+    onChange({ title, startDate, endDate, startPrice, endPrice });
+  };
+
+  const handleClear = () => {
+    onClear();
   };
 
   return (
@@ -51,15 +56,21 @@ const EventFilters = ({ onChange }: EventFilterProps) => {
 
       <div className="flex gap-2">
         <input
-          type="date"
-          value={startDate2}
-          onChange={(e) => setStartDate2(e.target.value)}
+          id="minPrice"
+          type="number"
+          min={0}
+          value={startPrice}
+          placeholder="Cena od"
+          onChange={(e) => setStartPrice(Number(e.target.value))}
           className="border p-2 rounded"
         />
         <input
-          type="date"
-          value={endDate2}
-          onChange={(e) => setEndDate2(e.target.value)}
+          id="maxPrice"
+          type="number"
+          min={0}
+          value={endPrice}
+          placeholder="Cena do"
+          onChange={(e) => setEndPrice(Number(e.target.value))}
           className="border p-2 rounded"
         />
       </div>
@@ -69,6 +80,12 @@ const EventFilters = ({ onChange }: EventFilterProps) => {
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         Filtruj
+      </button>
+      <button
+        onClick={handleClear}
+        className="bg-red-600 px-4 py-2 text-white hover:bg-red-700 cursor-pointer"
+      >
+        Wyczyść
       </button>
     </>
   );

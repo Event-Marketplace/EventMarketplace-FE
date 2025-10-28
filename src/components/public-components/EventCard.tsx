@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 interface Event {
   id: string;
   title: string;
-  date: string;
+  startDate: string;
+  endDate: string;
   location: string;
   imageUrl: string;
 }
@@ -27,10 +28,11 @@ export function EventCard({ event }: { event: Event }) {
         <CardTitle className="text-lg font-semibold">{event.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
-        <p className="text-sm text-gray-500">
-          📅 {new Date(event.date).toLocaleDateString("pl-PL")}
+        <p className="text-md text-gray-500">
+          📅 {new Date(event.startDate).toLocaleDateString("pl-PL")} -{" "}
+          {new Date(event.endDate).toLocaleDateString("pl-PL")}
         </p>
-        <p className="text-sm text-gray-600">📍 {event.location}</p>
+        <p className="text-md text-gray-600">📍 Warszawa </p>
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full hover:cursor-pointer">
