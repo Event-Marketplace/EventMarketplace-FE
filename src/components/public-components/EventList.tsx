@@ -54,7 +54,6 @@ const EventList = () => {
 
   const handleFilter = async (newFilters: any) => {
     setFilters((prev) => ({ ...newFilters }));
-    console.log("filters", newFilters);
     try {
       const response = await apiAxiosClient.get(`Event`, {
         params: {

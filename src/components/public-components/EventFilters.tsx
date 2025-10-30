@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import trashIcon from "@/images/trash.svg";
+import Image from "next/image";
 
 type EventFilterProps = {
   onChange: (filters: {
@@ -25,6 +27,11 @@ const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
   };
 
   const handleClear = () => {
+    setTitle("");
+    setStartDate("");
+    setEndDate("");
+    setStartPrice("");
+    setEndPrice("");
     onClear();
   };
 
@@ -74,18 +81,14 @@ const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
           className="border p-2 rounded"
         />
       </div>
-
+      <button onClick={handleClear} className="cursor-pointer">
+        <Image src={trashIcon} alt="sd" height={32} />
+      </button>
       <button
         onClick={handleApply}
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         Filtruj
-      </button>
-      <button
-        onClick={handleClear}
-        className="bg-red-600 px-4 py-2 text-white hover:bg-red-700 cursor-pointer"
-      >
-        Wyczyść
       </button>
     </>
   );
