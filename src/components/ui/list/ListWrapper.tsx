@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Pagination from "../Pagination";
+import Pagination from "../pagination/Pagination";
 
 type ListData<T> = {
   items: T[];
