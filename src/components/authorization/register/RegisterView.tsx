@@ -131,6 +131,7 @@ const RegisterView = () => {
                 placeholder="Hasło"
                 width={300}
               />
+
               <Field
                 as={InputEM}
                 name="confirmPassword"

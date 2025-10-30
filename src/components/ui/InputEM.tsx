@@ -12,6 +12,8 @@ const StyledInput = styled.input<InputProps>`
   border-radius: 50px;
   padding: 20px;
   width: ${(props) => (props.width ? `${props.width}px` : "200px")};
+  background-color: white;
+  color: black;
 `;
 
 const InputEM = ({ width, ...props }: InputProps) => {

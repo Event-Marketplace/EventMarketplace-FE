@@ -143,6 +143,12 @@ const MobileMenu = styled.nav`
   }
 `;
 
+const LogoClicked = styled(Image)`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 type GlobalLayoutProps = {
   children: React.ReactNode;
 };
@@ -169,11 +175,24 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/auth/login");
   };
 
+  const handleEventList = () => {
+    router.push("/event-pub");
+  };
+
+  const handleHome = () => {
+    router.push("/home");
+  };
+
   return (
     <>
       <GlobalBox>
         <GlobalHeader>
-          <Image src={logoWithTextIcon} alt="logo" width={150} />
+          <LogoClicked
+            src={logoWithTextIcon}
+            alt="logo"
+            width={150}
+            onClick={handleHome}
+          />
           <HeaderPanelMenu>
             <Image
               src={burgerIcon}
@@ -184,14 +203,18 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
           </HeaderPanelMenu>
           {isMenuOpen && (
             <MobileMenu aria-label="Mobilne menu nawigacyjne">
-              <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+              <HeaderLink onClick={handleEventList}>
+                Wyszukaj wydarzenie
+              </HeaderLink>
               <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
               <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
               <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
             </MobileMenu>
           )}
           <HeaderPanelSection aria-label="Główne menu nawigacyjne">
-            <HeaderLink onClick={handleLogin}>Wyszukaj wydarzenie</HeaderLink>
+            <HeaderLink onClick={handleEventList}>
+              Wyszukaj wydarzenie
+            </HeaderLink>
             <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
             <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
             <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
