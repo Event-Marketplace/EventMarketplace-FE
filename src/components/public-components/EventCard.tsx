@@ -16,7 +16,13 @@ interface Event {
   imageUrl: string;
 }
 
-export function EventCard({ event }: { event: Event }) {
+export function EventCard({
+  event,
+  onOpenModal,
+}: {
+  event: Event;
+  onOpenModal: () => void;
+}) {
   return (
     <Card className="bg-blue-50 border border-blue-200 hover:border-blue-500 overflow-hidden shadow-md hover:shadow-lg transition">
       <img
@@ -35,7 +41,11 @@ export function EventCard({ event }: { event: Event }) {
         <p className="text-md text-gray-600">📍 Warszawa </p>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full hover:cursor-pointer">
+        <Button
+          variant="outline"
+          className="w-full hover:cursor-pointer"
+          onClick={onOpenModal}
+        >
           Zobacz więcej
         </Button>
       </CardFooter>

@@ -6,6 +6,9 @@ import { EventCard } from "./EventCard";
 import ListWrapper from "../ui/ListWrapper";
 import EventFilters from "./EventFilters";
 import { title } from "process";
+import InfoModalEM from "../ui/InfoModalEM";
+import Image from "next/image";
+import { EventModalInfo } from "./EventModalInfo";
 
 interface Event {
   id: string;
@@ -14,6 +17,10 @@ interface Event {
   endDate: string;
   location: string;
   imageUrl: string;
+  availableTickets: number;
+  createdAt: string;
+  description: string;
+  price: number;
 }
 
 interface EventResponse {
@@ -32,6 +39,8 @@ const EventList = () => {
     startPrice: 0,
     endPrice: 0,
   });
+  const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +81,14 @@ const EventList = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+  const handleOpenModal = (event: Event) => {
+    setOpen(true);
+    setSelectedEvent(event);
   };
 
   //   async function fetchEvents() {
@@ -120,10 +137,19 @@ const EventList = () => {
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
             {eventList.events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard
+                key={event.id}
+                event={event}
+                onOpenModal={() => handleOpenModal(event)}
+              />
             ))}
           </div>
         </ListWrapper>
+        <EventModalInfo
+          event={selectedEvent}
+          onClose={handleCloseModal}
+          open={open}
+        />
       </>
     );
   }
