@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "../ui/button";
-import InfoModalEM from "../ui/InfoModalEM";
+import InfoModalEM from "../ui/modals/InfoModalEM";
 
 interface Event {
   id: string;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "./button";
+import { Button } from "../button";
 
 type ModalProps = {
   children: React.ReactNode;
