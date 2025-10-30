@@ -138,15 +138,6 @@ const HomeLayout = () => {
   const sportPhotos = [es1.src, es2.src, es3.src, es4.src, es5.src];
   const otherPhotos = [eo1.src, eo2.src, eo3.src, eo4.src, eo5.src];
 
-  const fetchData = async () => {
-    const response = await getTest();
-    console.log("response", response);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <>
       <HomeBox>
