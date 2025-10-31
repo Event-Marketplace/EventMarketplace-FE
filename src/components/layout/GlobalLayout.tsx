@@ -75,6 +75,10 @@ const GlobalContent = styled.div`
   padding: 50px;
   top: 100px;
   position: relative;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 10px 20px;
+  }
 `;
 
 const GlobalFooter = styled.footer`

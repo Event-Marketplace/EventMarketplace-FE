@@ -46,22 +46,22 @@ const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
         className="border p-2 rounded flex-1"
       />
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 md:flex flex-wrap">
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="border p-2 rounded"
+          className="sm:w-auto w-full border p-2 rounded"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="border p-2 rounded"
+          className="sm:w-auto w-full border p-2 rounded"
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 lg:flex flex-wrap">
         <input
           id="minPrice"
           type="number"
@@ -69,7 +69,7 @@ const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
           value={startPrice}
           placeholder="Cena od"
           onChange={(e) => setStartPrice(Number(e.target.value))}
-          className="border p-2 rounded"
+          className="sm:w-auto w-full border p-2 rounded "
         />
         <input
           id="maxPrice"
@@ -78,7 +78,7 @@ const EventFilters = ({ onChange, onClear }: EventFilterProps) => {
           value={endPrice}
           placeholder="Cena do"
           onChange={(e) => setEndPrice(Number(e.target.value))}
-          className="border p-2 rounded"
+          className="sm:w-auto w-full border p-2 rounded"
         />
       </div>
       <button onClick={handleClear} className="cursor-pointer">
