@@ -24,9 +24,9 @@ const ListWrapper = <T,>({
   filters,
 }: ListWrapperProps<T>) => {
   return (
-    <div className="p-8 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
+    <div className="sm:p-8 p-0 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
       {filters && (
-        <div className="flex flex-column gap-5 bg-white p-5 shadow-md">
+        <div className="flex flex-col xl:flex-row gap-5 bg-white p-5 shadow-md">
           {filters}
         </div>
       )}
