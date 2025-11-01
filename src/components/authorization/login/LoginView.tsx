@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
+import { loginUser } from "@/services/loginUser";
 
 interface LoginValues {
   email: string;
@@ -51,23 +52,31 @@ const LoginView = () => {
     }
 
     const body = {
-      dto: {
+      Dto: {
         email: values.email,
         password: values.password,
       },
     };
-
     try {
-      await apiAxiosClient.post("User/login", body);
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Błąd logowania");
+        return;
+      }
+
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
         router.push("/user");
       }, 2000);
-    } catch (error: unknown) {
-      const err = error as AxiosError<{ error: string }>;
-      const message =
-        err?.response?.data?.error || "Wystąpił błąd na serwerze.";
-      toast.error(message);
+    } catch (error) {
+      toast.error("Błąd połączenia z serwerem.");
     }
   };
 

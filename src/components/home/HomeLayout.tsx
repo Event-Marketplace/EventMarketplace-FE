@@ -6,7 +6,7 @@ import concerBgImg from "@/images/bg.jpg";
 import Gallery from "../ui/Gallery";
 import { useEffect } from "react";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
-import { getTest } from "@/api/getTest";
+import { getTest } from "@/app/api/getTest";
 import { breakpoints } from "@/styles/breakpoints";
 
 import es1 from "@/images/events/motocros.jpg";
