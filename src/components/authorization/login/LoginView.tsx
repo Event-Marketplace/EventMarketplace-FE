@@ -73,7 +73,7 @@ const LoginView = () => {
 
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
-        router.push("/user");
+        router.push("/organizer-panel");
       }, 2000);
     } catch (error) {
       toast.error("Błąd połączenia z serwerem.");

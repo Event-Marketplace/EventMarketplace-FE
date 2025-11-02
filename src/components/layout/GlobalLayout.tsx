@@ -10,8 +10,10 @@ import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
 import burgerIcon from "@/images/menuBurger.svg";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { breakpoints } from "@/styles/breakpoints";
+import { getUserFromToken, User } from "@/services/getUserFromToken";
+import { setuid } from "process";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -160,10 +162,30 @@ type GlobalLayoutProps = {
 const GlobalLayout = ({ children }: GlobalLayoutProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User>();
   const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authResponse = await fetch("api/auth/me", {
+        credentials: "include",
+      });
+
+      if (authResponse.ok) {
+        const data = await authResponse.json();
+        setUser(data);
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   // dopóki komponent nie zhydratuje, pokaż np. czarne tło
@@ -187,16 +209,33 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/home");
   };
 
+  const handleOrganizer = () => {
+    router.push("/organizer-panel");
+  };
+
+  const handleLogout = async () => {
+    await fetch("api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    setIsAuthenticated(false);
+    router.push("/auth/login");
+  };
+
   return (
     <>
       <GlobalBox>
         <GlobalHeader>
-          <LogoClicked
-            src={logoWithTextIcon}
-            alt="logo"
-            width={150}
-            onClick={handleHome}
-          />
+          <div className="flex justify-start items-center gap-8">
+            <LogoClicked
+              src={logoWithTextIcon}
+              alt="logo"
+              width={150}
+              onClick={handleHome}
+            />
+          </div>
+
           <HeaderPanelMenu>
             <Image
               src={burgerIcon}
@@ -207,21 +246,53 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
           </HeaderPanelMenu>
           {isMenuOpen && (
             <MobileMenu aria-label="Mobilne menu nawigacyjne">
-              <HeaderLink onClick={handleEventList}>
-                Wyszukaj wydarzenie
-              </HeaderLink>
-              <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
-              <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
-              <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
+              {!isAuthenticated ? (
+                <>
+                  <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
+                  <HeaderLink onClick={handleRegistration}>
+                    Rejestracja
+                  </HeaderLink>
+                  <HeaderLink onClick={handleEventList}>
+                    Wyszukaj wydarzenie
+                  </HeaderLink>
+                  <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center text-2xl border border-x-10 px-2 gap-5">
+                    <strong>Organizator </strong> {user?.email}
+                  </div>
+                  <HeaderLink onClick={handleOrganizer}>
+                    Panel organizatora
+                  </HeaderLink>
+                  <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
+                </>
+              )}
             </MobileMenu>
           )}
           <HeaderPanelSection aria-label="Główne menu nawigacyjne">
-            <HeaderLink onClick={handleEventList}>
-              Wyszukaj wydarzenie
-            </HeaderLink>
-            <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
-            <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
-            <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
+            {!isAuthenticated ? (
+              <>
+                <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
+                <HeaderLink onClick={handleRegistration}>
+                  Rejestracja
+                </HeaderLink>
+                <HeaderLink onClick={handleEventList}>
+                  Wyszukaj wydarzenie
+                </HeaderLink>
+                <HeaderLink onClick={handleLogin}>O nas</HeaderLink>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center text-2xl border border-x-10 px-2 gap-5">
+                  <strong>Organizator </strong> {user?.email}
+                </div>
+                <HeaderLink onClick={handleOrganizer}>
+                  Panel organizatora
+                </HeaderLink>
+                <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
+              </>
+            )}
           </HeaderPanelSection>
         </GlobalHeader>
         <GlobalContent>{children}</GlobalContent>

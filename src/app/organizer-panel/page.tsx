@@ -1,14 +1,14 @@
 import GlobalLayout from "@/components/layout/GlobalLayout";
-import { CheckTokenExist } from "@/services/checkTokenExist";
+import { CheckAuthorization } from "@/services/checkAutorization";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function OrganizerPanelRoute() {
-  await CheckTokenExist();
+  await CheckAuthorization();
 
   return (
     <GlobalLayout>
-      <div>sss</div>
+      <div>Tutaj będzie panel organizatora</div>
     </GlobalLayout>
   );
 }
