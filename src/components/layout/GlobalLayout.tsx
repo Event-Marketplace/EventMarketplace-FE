@@ -14,6 +14,7 @@ import { use, useEffect, useState } from "react";
 import { breakpoints } from "@/styles/breakpoints";
 import { getUserFromToken, User } from "@/services/getUserFromToken";
 import { setuid } from "process";
+import React from "react";
 
 const GlobalBox = styled.div`
   background-color: white;
@@ -186,7 +187,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
     };
 
     checkAuth();
-  }, []);
+  }, [isMounted]);
 
   // dopóki komponent nie zhydratuje, pokaż np. czarne tło
   if (!isMounted) {
@@ -219,6 +220,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
       credentials: "include",
     });
 
+    localStorage.removeItem("userEmail");
     setIsAuthenticated(false);
     router.push("/auth/login");
   };
@@ -295,7 +297,11 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
             )}
           </HeaderPanelSection>
         </GlobalHeader>
-        <GlobalContent>{children}</GlobalContent>
+        <GlobalContent>
+          {React.isValidElement(children)
+            ? React.cloneElement(children as React.ReactElement<any>, { user })
+            : children}
+        </GlobalContent>
         <GlobalFooter>
           <LogoWrapper>
             <Image src={logoWithTextIcon} alt="logo z tekstem" />
