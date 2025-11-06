@@ -5,6 +5,8 @@ import avatarIcon from "@/images/userProfile/avatar.svg";
 import { useEffect, useState } from "react";
 import { apiAxiosClient } from "@/lib/apiAxiosClient";
 import { User } from "@/services/getUserFromToken";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 interface UserResponse {
   id: string | null;
@@ -19,14 +21,13 @@ interface UserResponse {
   registrationDate: string;
 }
 
-type PanelOrgProps = {
-  user?: User;
-};
-
-const PanelOrg = ({ user }: PanelOrgProps) => {
+const PanelOrg = () => {
   const [userData, setUserData] = useState<UserResponse>();
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const { user } = useUser();
 
+  console.log("user", user);
   useEffect(() => {
     if (!user) return;
     setLoading(true);
@@ -49,6 +50,12 @@ const PanelOrg = ({ user }: PanelOrgProps) => {
 
     fetchUserInfo();
   }, [user?.email]);
+
+  const handleNav = (item: string) => {
+    if (item === "Dodaj wydarzenie") {
+      router.push("/protected/event/create");
+    }
+  };
 
   const items = [
     "Moje wydarzenia",
@@ -95,6 +102,7 @@ const PanelOrg = ({ user }: PanelOrgProps) => {
             <div className="flex flex-wrap xl:flex-nowrap xl:px-20 justify-center items-center items-center w-3/4 gap-5">
               {items.map((item, index) => (
                 <div
+                  onClick={() => handleNav(item)}
                   key={index}
                   className="bg-red-400 border-red-500 border-5 rounded-lg w-1/4 h-1/4 flex justify-center items-center text-2xl hover:bg-red-500 hover:text-white cursor-pointer"
                 >

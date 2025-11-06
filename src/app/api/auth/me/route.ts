@@ -1,7 +1,7 @@
 import { getUserFromToken } from "@/services/getUserFromToken";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     const cookieHeader = req.headers.get('cookie');
 
     if(!cookieHeader || !cookieHeader.includes("access_token")){

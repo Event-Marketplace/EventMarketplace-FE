@@ -1,10 +1,6 @@
 import AuthorizationLayout from "@/app/auth/layout";
-import LoginView from "@/components/authorization/login/LoginView";
+import LoginView from "@/components/auth/login/LoginView";
 
 export default function LoginPage() {
-  return (
-    <AuthorizationLayout>
-      <LoginView />
-    </AuthorizationLayout>
-  );
+  return <LoginView />;
 }

@@ -37,7 +37,7 @@ const RegisterView = () => {
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const handleHomePage = () => {
-    router.push("/home");
+    router.push("/public/home");
   };
 
   const errors: ErrorFlags = {
