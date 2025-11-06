@@ -69,7 +69,7 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
   }
 
   const handleOrganizer = () => {
-    router.push("/protected/organizer-panel");
+    router.push("/organizer-panel");
   };
 
   const handleLogout = async () => {
@@ -80,7 +80,7 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
 
     localStorage.removeItem("userEmail");
     setIsAuthenticated(false);
-    router.push("/auth/login");
+    router.push("/login");
   };
 
   if (isAuthenticated === null) {

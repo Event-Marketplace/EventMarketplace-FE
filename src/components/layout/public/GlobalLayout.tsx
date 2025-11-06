@@ -48,19 +48,19 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
   }
 
   const handleRegistration = () => {
-    router.push("/auth/register");
+    router.push("/register");
   };
 
   const handleLogin = () => {
-    router.push("/auth/login");
+    router.push("/login");
   };
 
   const handleEventList = () => {
-    router.push("/public/event-pub");
+    router.push("/events-public");
   };
 
   const handleHome = () => {
-    router.push("/public/home");
+    router.push("/home");
   };
 
   return (

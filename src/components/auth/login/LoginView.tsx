@@ -30,7 +30,7 @@ const LoginView = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleHomePage = () => {
-    router.push("/public/home");
+    router.push("/home");
   };
 
   const errors = {
@@ -73,7 +73,7 @@ const LoginView = () => {
 
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
-        router.push("/protected/organizer-panel");
+        router.push("/organizer-panel");
       }, 2000);
     } catch (error) {
       toast.error("Błąd połączenia z serwerem.");

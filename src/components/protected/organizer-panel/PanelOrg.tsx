@@ -53,7 +53,7 @@ const PanelOrg = () => {
 
   const handleNav = (item: string) => {
     if (item === "Dodaj wydarzenie") {
-      router.push("/protected/event/create");
+      router.push("/event/create");
     }
   };
 
