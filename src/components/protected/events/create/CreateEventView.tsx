@@ -1,5 +1,9 @@
 const CreateEventView = () => {
-  return <div>Dodaj nowe wydarzenie</div>;
+  return (
+    <div>
+      <div>Dodaj nowe wydarzenie</div>
+    </div>
+  );
 };
 
 export default CreateEventView;
