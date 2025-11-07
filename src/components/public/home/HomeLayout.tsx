@@ -3,10 +3,7 @@
 import styled from "styled-components";
 import Image from "next/image";
 import concerBgImg from "@/images/bg.jpg";
-import Gallery from "../ui/Gallery";
-import { useEffect } from "react";
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
-import { getTest } from "@/api/getTest";
+import Gallery from "../../ui/Gallery";
 import { breakpoints } from "@/styles/breakpoints";
 
 import es1 from "@/images/events/motocros.jpg";
@@ -82,8 +79,8 @@ const InfoContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin-top: 5%;
   font-size: 22px;
+  margin-bottom: 5%;
   background-color: #f2b705;
   padding: 120px 50px;
   font-family: "Montserrat", sans-serif;
@@ -147,10 +144,6 @@ const HomeLayout = () => {
             Sport, muzyka, motoryzacja i wiele więcej - znajdź event dla siebie.
           </SecondTitle>
         </HeroSection>
-        <ImagesSection>
-          <Gallery images={sportPhotos} />
-          <Gallery images={otherPhotos} />
-        </ImagesSection>
         <InfoContent>
           <p>Witaj w Evently — Twoim centrum wydarzeń</p>
           Odkrywaj, organizuj i dołączaj do wydarzeń, które naprawdę Cię
@@ -176,6 +169,12 @@ const HomeLayout = () => {
             przyjemnością. Dołącz do społeczności, która żyje wydarzeniami! 🎉
           </p>
         </InfoContent>
+
+        <ImagesSection>
+          <Gallery images={sportPhotos} />
+          <Gallery images={otherPhotos} />
+        </ImagesSection>
+
         <InfoContent2>
           <p>
             Zacznij już teraz 🔸 Przeglądaj najciekawsze wydarzenia 🔸 Dołącz do
