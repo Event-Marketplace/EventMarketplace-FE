@@ -67,7 +67,7 @@ const PanelOrg = () => {
 
   if (userData) {
     return (
-      <>
+      <div className="max-w-[1920px] mx-auto">
         <div>
           <p className="text-2xl p-6">
             <strong>Informacje o koncie / akcje</strong>
@@ -156,7 +156,7 @@ const PanelOrg = () => {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };
