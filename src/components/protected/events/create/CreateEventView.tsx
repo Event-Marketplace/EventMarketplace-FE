@@ -9,15 +9,45 @@ import Image from "next/image";
 import trashIcon from "@/images/trash.svg";
 import { useState } from "react";
 import UploadArea from "@/components/ui/uploadArea";
+import { EventModel } from "@/types/Event";
 
 const CreateEventView = () => {
-  const initialValues: any = {
-    email: "",
-    password: "",
+  const [file, setFile] = useState<File | null>(null);
+
+  const initialValues: EventModel = {
+    title: "",
+    description: "",
+    price: "",
+    ticketsCount: "",
+    startDate: "",
+    endDate: "",
+    postalCode: "",
+    city: "",
+    street: "",
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (values: typeof initialValues) => {
+    //walidacja
+
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    if (file) {
+      formData.append("image", file);
+    }
+
+    //wysyłanie requestu na be
+
+    //przekierowanie do listy moich wydarzeń
+
     console.log("Utworzono wydarzenie");
+    console.log("values", values);
+
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(key, value);
+    // }
   };
 
   return (
@@ -31,7 +61,7 @@ const CreateEventView = () => {
           <div className="flex w-full flex-col gap-8 mb-8 h-auto rounded-lg">
             <div className="w-full flex flex-col gap-3 pb-6 border-b">
               <div className="flex w-full gap-10">
-                <UploadArea />
+                <UploadArea onFileSelect={setFile} />
               </div>
             </div>
 
@@ -43,7 +73,7 @@ const CreateEventView = () => {
                 <label className="text-white text-lg">Tytuł wydarzenia</label>
                 <Field
                   as={InputEM}
-                  name="email"
+                  name="title"
                   type="text"
                   placeholder="Wpisz tytuł wydarzenia "
                 />

@@ -27,7 +27,6 @@ const PanelOrg = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  console.log("user", user);
   useEffect(() => {
     if (!user) return;
     setLoading(true);

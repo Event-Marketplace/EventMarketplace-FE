@@ -2,7 +2,11 @@ import { useState } from "react";
 import trashIcon from "@/images/trash.svg";
 import Image from "next/image";
 
-const UploadArea = () => {
+type UploadAreaProps = {
+  onFileSelect: (file: File | null) => void;
+};
+
+const UploadArea = ({ onFileSelect }: UploadAreaProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const allowedTypes = ["image/png", "image/jpeg"];
@@ -24,6 +28,7 @@ const UploadArea = () => {
       }
 
       setFile(selectedFile);
+      onFileSelect(selectedFile);
       console.log("Wybrano plik:", selectedFile);
       setPreview(URL.createObjectURL(selectedFile));
     }

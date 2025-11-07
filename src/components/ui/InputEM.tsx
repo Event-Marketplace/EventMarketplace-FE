@@ -30,12 +30,12 @@ const StyledTextarea = styled.textarea<InputProps>`
 `;
 
 const InputEM = ({ width, textarea = false, ...props }: InputProps) => {
-  const [field, meta] = useField(props.name); //hook z formika - automatycznie pobiera value , onchange itp dla Formika
+  //const [field, meta] = useField(props.name); //hook z formika - automatycznie pobiera value , onchange itp dla Formika
 
   if (textarea) {
-    return <StyledTextarea {...field} {...props} width={width} />;
+    return <StyledTextarea {...props} width={width} />;
   }
-  return <StyledInput {...field} {...props} width={width} />;
+  return <StyledInput {...props} width={width} />;
 };
 
 export default InputEM;
