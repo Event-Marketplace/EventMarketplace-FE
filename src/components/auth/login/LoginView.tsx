@@ -15,7 +15,7 @@ import InputEM from "@/components/ui/InputEM";
 import Image from "next/image";
 import logo from "@/images/logoWithText.svg";
 import { useRouter } from "next/navigation";
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxiosClient } from "@/lib/apiAxios";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { loginUser } from "@/services/loginUser";

@@ -8,7 +8,7 @@ import InputEM from "../../ui/InputEM";
 import ButtonEM from "../../ui/ButtonEM";
 import { Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxiosClient } from "@/lib/apiAxios";
 import {
   AuthCard,
   AuthForm,

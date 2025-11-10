@@ -1,4 +1,4 @@
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxiosClient } from "@/lib/apiAxios";
 
 
 export async function loginUser(body: any){

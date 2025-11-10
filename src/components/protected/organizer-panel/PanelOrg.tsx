@@ -3,7 +3,7 @@
 import Image from "next/image";
 import avatarIcon from "@/images/userProfile/avatar.svg";
 import { useEffect, useState } from "react";
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxios } from "@/lib/apiAxios";
 import { User } from "@/services/getUserFromToken";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
@@ -32,7 +32,7 @@ const PanelOrg = () => {
     setLoading(true);
     const fetchUserInfo = async () => {
       try {
-        const res = await apiAxiosClient.get<UserResponse>("User/user-info", {
+        const res = await apiAxios.get<UserResponse>("User/user-info", {
           params: {
             email: user?.email,
           },

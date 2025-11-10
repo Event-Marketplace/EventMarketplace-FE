@@ -1,6 +1,7 @@
 import { useState } from "react";
 import trashIcon from "@/images/trash.svg";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 type UploadAreaProps = {
   onFileSelect: (file: File | null) => void;
@@ -13,23 +14,25 @@ const UploadArea = ({ onFileSelect }: UploadAreaProps) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]; // <--- tu pobierasz plik
-    const maxSizeInMb = 2;
+    const maxSizeInMb = 3;
     const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
 
     if (selectedFile) {
       if (selectedFile.size > maxSizeInBytes) {
-        alert(`Plik jest za duy! Maksymalny rozmiar to ${maxSizeInMb} MB.`);
+        toast.error(
+          `Plik jest za duy! Maksymalny rozmiar to ${maxSizeInMb} MB.`
+        );
         return;
       }
 
       if (!allowedTypes.includes(selectedFile.type)) {
-        alert(`Dozwolone są tylko pliki JPG lub PNG.`);
+        toast.error(`Dozwolone są tylko pliki JPG lub PNG.`);
         return;
       }
 
       setFile(selectedFile);
       onFileSelect(selectedFile);
-      console.log("Wybrano plik:", selectedFile);
+
       setPreview(URL.createObjectURL(selectedFile));
     }
   };

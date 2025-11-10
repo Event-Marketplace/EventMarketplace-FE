@@ -1,4 +1,4 @@
-import { apiAxiosClient } from "./apiAxiosClient";
+import { apiAxiosClient } from "./apiAxios";
 
 export interface EventResponse {
     events: Event[];

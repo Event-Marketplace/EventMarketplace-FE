@@ -10,9 +10,13 @@ import trashIcon from "@/images/trash.svg";
 import { useState } from "react";
 import UploadArea from "@/components/ui/uploadArea";
 import { EventModel } from "@/types/Event";
+import { apiAxios, apiAxiosForm } from "@/lib/apiAxios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const CreateEventView = () => {
   const [file, setFile] = useState<File | null>(null);
+  const router = useRouter();
 
   const initialValues: EventModel = {
     title: "",
@@ -26,7 +30,7 @@ const CreateEventView = () => {
     street: "",
   };
 
-  const handleSubmit = (values: typeof initialValues) => {
+  const handleSubmit = async (values: typeof initialValues) => {
     //walidacja
 
     const formData = new FormData();
@@ -39,11 +43,16 @@ const CreateEventView = () => {
     }
 
     //wysyłanie requestu na be
+    try {
+      await apiAxiosForm.post("Event/", formData);
 
-    //przekierowanie do listy moich wydarzeń
-
-    console.log("Utworzono wydarzenie");
-    console.log("values", values);
+      //przekierowanie do listy moich wydarzeń
+      setTimeout(() => {
+        router.push("/organizer-panel");
+      }, 2000);
+    } catch (error) {
+      toast.error("Błąd podczas tworzenia wydarzenia.");
+    }
 
     // for (const [key, value] of formData.entries()) {
     //   console.log(key, value);
