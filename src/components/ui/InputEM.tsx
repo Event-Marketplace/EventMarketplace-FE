@@ -11,6 +11,7 @@ type InputProps = {
 
 const StyledInput = styled.input<InputProps>`
   border-radius: 10px;
+  border: 1px solid #ccc;
   padding: 20px;
   width: ${(props) => (props.width ? `${props.width}px` : "100%")};
   background-color: white;

@@ -1,8 +1,8 @@
-import { apiAxiosClient } from "@/lib/apiAxios";
-
+import { apiAxios } from "@/lib/apiAxios";
+ 
 
 export async function loginUser(body: any){
-    const res = await apiAxiosClient.post('User/login', body);
+    const res = await apiAxios.post('User/login', body);
 
     return res.data;
 }
