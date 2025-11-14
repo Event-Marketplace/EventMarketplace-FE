@@ -8,7 +8,7 @@ import InputEM from "../../ui/InputEM";
 import ButtonEM from "../../ui/ButtonEM";
 import { Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
-import { apiAxiosClient } from "@/lib/apiAxios";
+import { apiAxios } from "@/lib/apiAxios";
 import {
   AuthCard,
   AuthForm,
@@ -91,7 +91,7 @@ const RegisterView = () => {
     };
 
     try {
-      await apiAxiosClient.post("User/register", body);
+      await apiAxios.post("User/register", body);
       toast.success("Rejestracja zakończona sukcesem!");
       setTimeout(() => {
         router.push("/home");
