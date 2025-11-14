@@ -6,6 +6,6 @@ export async function CheckAuthorization(){
     const token = cookieStore.get("access_token")?.value;
   
     if (!token) {
-      redirect("auth/login");
+      redirect("/login");
     }
 }

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import avatarIcon from "@/images/userProfile/avatar.svg";
 import { useEffect, useState } from "react";
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxios } from "@/lib/apiAxios";
 import { User } from "@/services/getUserFromToken";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
@@ -27,13 +27,12 @@ const PanelOrg = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  console.log("user", user);
   useEffect(() => {
     if (!user) return;
     setLoading(true);
     const fetchUserInfo = async () => {
       try {
-        const res = await apiAxiosClient.get<UserResponse>("User/user-info", {
+        const res = await apiAxios.get<UserResponse>("User/user-info", {
           params: {
             email: user?.email,
           },
@@ -67,7 +66,7 @@ const PanelOrg = () => {
 
   if (userData) {
     return (
-      <>
+      <div className="max-w-[1920px] mx-auto">
         <div>
           <p className="text-2xl p-6">
             <strong>Informacje o koncie / akcje</strong>
@@ -156,7 +155,7 @@ const PanelOrg = () => {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };

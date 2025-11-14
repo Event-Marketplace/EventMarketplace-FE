@@ -1,4 +1,3 @@
-import AuthorizationLayout from "@/app/auth/layout";
 import LoginView from "@/components/auth/login/LoginView";
 
 export default function LoginPage() {

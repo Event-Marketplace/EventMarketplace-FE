@@ -1,6 +1,6 @@
 "use client";
 
-import { apiAxiosClient } from "@/lib/apiAxiosClient";
+import { apiAxios } from "@/lib/apiAxios";
 import { useEffect, useState } from "react";
 import { EventCard } from "./EventCard";
 import ListWrapper from "../../ui/list/ListWrapper";
@@ -45,7 +45,7 @@ const EventList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await apiAxiosClient.get(`Event?pageNumber=${page}`);
+        const response = await apiAxios.get(`Event?pageNumber=${page}`);
         setEventList(response.data);
       } catch (error) {
         console.error(error);
@@ -64,7 +64,7 @@ const EventList = () => {
   const handleFilter = async (newFilters: any) => {
     setFilters((prev) => ({ ...newFilters }));
     try {
-      const response = await apiAxiosClient.get(`Event`, {
+      const response = await apiAxios.get(`Event`, {
         params: {
           pageNumber: 1,
           title: newFilters.title || "",
