@@ -23,6 +23,14 @@ interface Event {
   price: number;
 }
 
+interface EventFiltersProps {
+  title?: string;
+  startDate?: string;
+  endDate?: string;
+  startPrice?: number | "";
+  endPrice?: number | "";
+}
+
 interface EventResponse {
   events: Event[];
   totalCount: number;
@@ -32,13 +40,7 @@ const EventList = () => {
   const [eventList, setEventList] = useState<EventResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState({
-    title: "",
-    startDate: "",
-    endDate: "",
-    startPrice: 0,
-    endPrice: 0,
-  });
+  const [filters, setFilters] = useState<EventFiltersProps>();
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -61,7 +63,7 @@ const EventList = () => {
     setPage(newPage);
   };
 
-  const handleFilter = async (newFilters: any) => {
+  const handleFilter = async (newFilters: EventFiltersProps) => {
     setFilters((prev) => ({ ...newFilters }));
     try {
       const response = await apiAxios.get(`Event`, {

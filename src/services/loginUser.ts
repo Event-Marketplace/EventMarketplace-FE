@@ -1,7 +1,11 @@
 import { apiAxios } from "@/lib/apiAxios";
- 
 
-export async function loginUser(body: any){
+type LoginProps = {
+    email:string;
+    password: string;
+}
+
+export async function loginUser(body: LoginProps){
     const res = await apiAxios.post('User/login', body);
 
     return res.data;

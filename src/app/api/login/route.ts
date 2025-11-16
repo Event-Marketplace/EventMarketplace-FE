@@ -21,12 +21,16 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (error: any) {
-    console.error("Błąd logowania:", error.message);
-    console.error()
-    return NextResponse.json(
-      { error: "Nieprawidłowy login lub hasło" },
-      { status: 400 }
-    );
+  } catch (error: unknown) {
+    let message = "Nieprawidłowy login lub hasło";
+
+    if (error instanceof Error) {
+      message = error.message;
+      console.error("Błąd logowania:", message);
+    } else {
+      console.error("Nieznany błąd logowania:", error);
+    }
+
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
