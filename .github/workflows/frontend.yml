@@ -19,13 +19,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "yarn"
-          
-      - name: Install dependencies
-        run: yarn install
 
-      - name: Build app
-        run: yarn build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name:  Upload build artifact
         uses: actions/upload-artifact@v4
