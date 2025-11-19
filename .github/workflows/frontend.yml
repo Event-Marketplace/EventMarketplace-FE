@@ -46,11 +46,11 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: event-marketplace
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/eventmarketplace-fe:dev -f Dockerfile .
+        run: docker build -t ghcr.io/event-marketplace/eventmarketplace-fe:dev -f Dockerfile .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository_owner }}/eventmarketplace-fe:dev
+        run: docker push ghcr.io/event-marketplace/eventmarketplace-fe:dev
