@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/event-marketplace/longicodeit/frontend:latest -f Dockerfile .
+        run: docker build -t ghcr.io/event-marketplace/eventmarketplace-fe/:dev -f Dockerfile .
 
       - name: Push Docker image
-        run: docker push ghcr.io/event-marketplace/longicodeit/frontend:latest
+        run: docker push ghcr.io/event-marketplace/eventmarketplace-fe:dev
