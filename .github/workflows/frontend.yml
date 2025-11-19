@@ -42,7 +42,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t bartlong/eventmarketplace-fe:dev -f /Dockerfile .
+        run: docker build -t bartlong/eventmarketplace-fe:dev -f Dockerfile .
 
       - name: Push Docker image
         run: docker push bartlong/eventmarketplace-fe:dev
