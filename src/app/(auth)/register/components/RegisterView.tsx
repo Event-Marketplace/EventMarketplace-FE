@@ -4,20 +4,22 @@ import styled from "styled-components";
 import logo from "@/images/logoWithText.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import InputEM from "../../ui/InputEM";
-import ButtonEM from "../../ui/ButtonEM";
+
 import { Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
 import { apiAxios } from "@/lib/apiAxios";
+
+import { AxiosError } from "axios";
+import ButtonEM from "@/components/ui/ButtonEM";
+import InputEM from "@/components/ui/InputEM";
 import {
   AuthCard,
-  AuthForm,
-  FormContent,
-  FormTitle,
   LogoContent,
+  FormContent,
   MobileLogoContent,
-} from "../CommonStyledComponents";
-import { AxiosError } from "axios";
+  FormTitle,
+  AuthForm,
+} from "../../CommonStyledComponents";
 
 interface RegisterValues {
   email: string;

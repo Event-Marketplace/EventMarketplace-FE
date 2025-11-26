@@ -3,10 +3,10 @@
 import { apiAxios } from "@/lib/apiAxios";
 import { useEffect, useState } from "react";
 import { EventCard } from "./EventCard";
-import ListWrapper from "../../ui/list/ListWrapper";
+import ListWrapper from "../../../../components/ui/list/ListWrapper";
 import EventFilters from "./EventFilters";
 import { title } from "process";
-import InfoModalEM from "../../ui/modals/InfoModalEM";
+import InfoModalEM from "../../../../components/ui/modals/InfoModalEM";
 import Image from "next/image";
 import { EventModalInfo } from "./EventModalInfo";
 

@@ -1,5 +1,4 @@
-import HomeLayout from "@/components/public/home/HomeLayout";
-import GlobalLayout from "@/components/layout/public/GlobalLayout";
+import HomeLayout from "@/app/(public)/home/components/HomeLayout";
 
 export default function Home() {
   return <HomeLayout />;

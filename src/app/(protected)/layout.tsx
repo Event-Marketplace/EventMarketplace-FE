@@ -1,6 +1,4 @@
-import AuthGlobalLayout from "@/components/layout/protected/AuthGlobalLayout";
-import { CheckAuthorization } from "@/services/checkAutorization";
-import { getUserFromToken } from "@/services/getUserFromToken";
+import AuthGlobalLayout from "@/components/layout/AuthGlobalLayout";
 
 export default async function ProtectedLayout({
   children,

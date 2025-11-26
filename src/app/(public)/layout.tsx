@@ -1,4 +1,4 @@
-import GlobalLayout from "@/components/layout/public/GlobalLayout";
+import GlobalLayout from "@/components/layout/GlobalLayout";
 
 export default function PublicLayout({
   children,

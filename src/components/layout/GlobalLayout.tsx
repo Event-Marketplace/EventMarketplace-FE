@@ -27,7 +27,7 @@ import {
   LogoWrapper,
   FooterInformationSection,
   GlobalBox,
-} from "../commonStyles";
+} from "./commonStyles";
 
 type GlobalLayoutProps = {
   children: React.ReactNode;
