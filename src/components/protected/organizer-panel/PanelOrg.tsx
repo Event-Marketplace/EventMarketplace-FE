@@ -7,6 +7,8 @@ import { apiAxios } from "@/lib/apiAxios";
 import { User } from "@/services/getUserFromToken";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/store";
 
 interface UserResponse {
   id: string | null;
@@ -25,16 +27,16 @@ const PanelOrg = () => {
   const [userData, setUserData] = useState<UserResponse>();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { user } = useUser();
+  const userEmail = useSelector((state: AppState) => state.auth.userEmail);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userEmail) return;
     setLoading(true);
     const fetchUserInfo = async () => {
       try {
         const res = await apiAxios.get<UserResponse>("User/user-info", {
           params: {
-            email: user?.email,
+            email: userEmail,
           },
         });
 
@@ -48,7 +50,7 @@ const PanelOrg = () => {
     };
 
     fetchUserInfo();
-  }, [user?.email]);
+  }, [userEmail]);
 
   const handleNav = (item: string) => {
     if (item === "Dodaj wydarzenie") {

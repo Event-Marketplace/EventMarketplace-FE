@@ -42,31 +42,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
   const dispatch = useDispatch<AppDispatch>();
   const accessToken = useSelector((state: AppState) => state.auth.accessToken);
   const userEmail = useSelector((state: AppState) => state.auth.userEmail);
-  const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState<string | null>();
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   if (!accessToken || !claims) {
-  //     dispatch(clearAccessToken());
-  //     router.push("/login");
-  //     return;
-  //   }
-  //   setUser({
-  //     id: claims.sub,
-  //     email: claims.email,
-  //     role: claims[
-  //       "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-  //     ],
-  //   });
-  //   setLoading(false);
-  //   setIsAuthenticated(true);
-  // }, [accessToken, dispatch, router]);
-
-  //tutaj porąbane to jest , trzeba to uporządkować!
   useEffect(() => {
     const init = async () => {
       try {
@@ -89,6 +70,7 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
       </div>
     );
   }
+
   const handleOrganizer = () => {
     router.push("/organizer-panel");
   };
