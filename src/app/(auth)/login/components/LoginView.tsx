@@ -1,14 +1,7 @@
 "use client";
 
 import { Field, Formik } from "formik";
-import {
-  AuthCard,
-  AuthForm,
-  FormContent,
-  FormTitle,
-  LogoContent,
-  MobileLogoContent,
-} from "../CommonStyledComponents";
+
 import ButtonEM from "@/components/ui/ButtonEM";
 import InputEM from "@/components/ui/InputEM";
 import Image from "next/image";
@@ -19,6 +12,14 @@ import { apiAxios } from "@/lib/apiAxios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setAccessToken } from "@/redux/auth/authSlice";
+import {
+  AuthCard,
+  LogoContent,
+  FormContent,
+  MobileLogoContent,
+  FormTitle,
+  AuthForm,
+} from "@/app/(auth)/CommonStyledComponents";
 
 interface LoginValues {
   email: string;

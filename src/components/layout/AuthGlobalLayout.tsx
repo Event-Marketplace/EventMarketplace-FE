@@ -23,7 +23,7 @@ import {
   LogoWrapper,
   FooterInformationSection,
   GlobalBox,
-} from "../commonStyles";
+} from "./commonStyles";
 import { UserProvider } from "@/context/UserContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "@/redux/store";

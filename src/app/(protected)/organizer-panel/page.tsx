@@ -1,4 +1,4 @@
-import PanelOrg from "../../../components/protected/organizer-panel/PanelOrg";
+import PanelOrg from "./components/PanelOrg";
 
 export default async function OrganizerPanelRoute() {
   return <PanelOrg />;

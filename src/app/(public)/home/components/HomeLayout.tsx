@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Image from "next/image";
 import concerBgImg from "@/images/bg.jpg";
-import Gallery from "../../ui/Gallery";
+import Gallery from "../../../../components/ui/Gallery";
 import { breakpoints } from "@/styles/breakpoints";
 
 import es1 from "@/images/events/motocros.jpg";

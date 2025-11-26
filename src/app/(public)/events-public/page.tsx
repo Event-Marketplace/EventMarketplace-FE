@@ -1,5 +1,4 @@
-import EventList from "@/components/public/Events/EventList";
-import GlobalLayout from "../../../components/layout/public/GlobalLayout";
+import EventList from "@/app/(public)/events-public/components/EventList";
 
 export default function EventPub() {
   return <EventList />;
