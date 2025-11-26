@@ -7,6 +7,5 @@ export default async function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await CheckAuthorization();
   return <AuthGlobalLayout>{children}</AuthGlobalLayout>;
 }

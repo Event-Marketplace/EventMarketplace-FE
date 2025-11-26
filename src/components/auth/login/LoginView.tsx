@@ -4,7 +4,6 @@ import { Field, Formik } from "formik";
 import {
   AuthCard,
   AuthForm,
-  ContentWrapper,
   FormContent,
   FormTitle,
   LogoContent,
@@ -15,10 +14,11 @@ import InputEM from "@/components/ui/InputEM";
 import Image from "next/image";
 import logo from "@/images/logoWithText.svg";
 import { useRouter } from "next/navigation";
-import { apiAxios } from "@/lib/apiAxios";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-import { loginUser } from "@/services/loginUser";
+import { apiAxios } from "@/lib/apiAxios";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setAccessToken } from "@/redux/auth/authSlice";
 
 interface LoginValues {
   email: string;
@@ -28,6 +28,7 @@ interface LoginValues {
 const LoginView = () => {
   const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleHomePage = () => {
     router.push("/home");
@@ -58,18 +59,21 @@ const LoginView = () => {
       },
     };
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      // const res = await fetch("/api/login", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(body),
+      // });
+      const res = await apiAxios.post("User/login", body);
+      const data = await res.data;
+      console.log("accessToken", data);
 
-      const data = await res.json();
-
-      if (!res.ok) {
+      if (!data) {
         toast.error(data.error || "Błąd logowania");
         return;
       }
+
+      dispatch(setAccessToken(data.tokenJwt));
 
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
