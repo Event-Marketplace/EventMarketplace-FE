@@ -60,11 +60,6 @@ const LoginView = () => {
       },
     };
     try {
-      // const res = await fetch("/api/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(body),
-      // });
       const res = await apiAxios.post("User/login", body);
       const data = await res.data;
       console.log("accessToken", data);

@@ -23,44 +23,48 @@ interface Event {
   price: number;
 }
 
-interface EventFiltersProps {
+export interface EventFiltersProps {
   title?: string;
   startDate?: string;
   endDate?: string;
   startPrice?: number | "";
   endPrice?: number | "";
+  pageNumber?: number | "";
 }
 
-interface EventResponse {
+export interface EventResponse {
   events: Event[];
   totalCount: number;
 }
 
-const EventList = () => {
-  const [eventList, setEventList] = useState<EventResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+const EventList = ({ events, totalCount }: EventResponse) => {
+  const [eventList, setEventList] = useState<Event[]>(events);
+  const [totalItems, setTotalItems] = useState<number>(totalCount);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<EventFiltersProps>();
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await apiAxios.get(`Event?pageNumber=${page}`);
-        setEventList(response.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [page]);
-
-  const handleChangePage = (newPage: number) => {
+  const handleChangePage = async (newPage: number) => {
     setPage(newPage);
+
+    try {
+      const response = await apiAxios.get("Event", {
+        params: {
+          pageNumber: newPage,
+          title: filters?.title || "",
+          startDate: filters?.startDate || "",
+          endDate: filters?.endDate || "",
+          startPrice: filters?.startPrice || "",
+          endPrice: filters?.endPrice || "",
+        },
+      });
+
+      setEventList(response.data.events);
+      setTotalItems(response.data.totalCount);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleFilter = async (newFilters: EventFiltersProps) => {
@@ -77,11 +81,10 @@ const EventList = () => {
         },
       });
       setPage(1);
-      setEventList(response.data);
+      setEventList(response.data.events);
+      setTotalItems(response.data.totalCount);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -93,68 +96,51 @@ const EventList = () => {
     setSelectedEvent(event);
   };
 
-  //   async function fetchEvents() {
-  //     try {
-  //       const res = await fetch("https://twoj-backend-url/api/events")
-  //       const data = await res.json()
-  //       setEvents(data)
-  //     } catch (error) {
-  //       console.error("Błąd pobierania wydarzeń:", error)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  if (loading)
-    return <p className="text-center py-10">Ładowanie wydarzeń...</p>;
-
-  if (eventList) {
-    return (
-      <>
-        <h1 className="text-4xl font-sans font-medium italic leading-relaxed text-center mb-3">
-          Lista nadchodzących wydarzeń
-        </h1>
-        <ListWrapper
-          data={{
-            items: eventList.events,
-            totalCount: eventList.totalCount,
-            totalPages: Math.ceil(eventList.totalCount / 9),
-            currentPage: page,
-          }}
-          onPageChange={handleChangePage}
-          filters={
-            <EventFilters
-              onChange={handleFilter}
-              onClear={() =>
-                handleFilter({
-                  title: "",
-                  startDate: "",
-                  endDate: "",
-                  startPrice: "",
-                  endPrice: "",
-                })
-              }
+  return (
+    <>
+      <h1 className="text-4xl font-sans font-medium italic leading-relaxed text-center mb-3">
+        Lista nadchodzących wydarzeń
+      </h1>
+      <ListWrapper
+        data={{
+          items: eventList,
+          totalCount: totalItems,
+          totalPages: Math.ceil(totalItems / 9),
+          currentPage: page,
+        }}
+        onPageChange={handleChangePage}
+        filters={
+          <EventFilters
+            onChange={handleFilter}
+            onClear={() =>
+              handleFilter({
+                title: "",
+                startDate: "",
+                endDate: "",
+                startPrice: "",
+                endPrice: "",
+              })
+            }
+          />
+        }
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+          {eventList.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onOpenModal={() => handleOpenModal(event)}
             />
-          }
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-            {eventList.events.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onOpenModal={() => handleOpenModal(event)}
-              />
-            ))}
-          </div>
-        </ListWrapper>
-        <EventModalInfo
-          event={selectedEvent}
-          onClose={handleCloseModal}
-          open={open}
-        />
-      </>
-    );
-  }
+          ))}
+        </div>
+      </ListWrapper>
+      <EventModalInfo
+        event={selectedEvent}
+        onClose={handleCloseModal}
+        open={open}
+      />
+    </>
+  );
 };
 
 export default EventList;
