@@ -29,34 +29,34 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
     <div className="w-full bg-gray-200 p-5 shadow-lg hover:bg-gray-300">
       <div className="flex justify-between flex-wrap">
         <div className="w-1/5 flex flex-col pr-2">
-          <label className="text-gray-400">Tytuł</label>
+          <label className="text-gray-500">Tytuł</label>
           <span
             className="hover: cursor-pointer"
             onClick={() => {
               setOpenDetails(!openDetail);
             }}
           >
-            {event.title}
+            <strong>{event.title}</strong>
           </span>
         </div>
         <div className="w-1/8 flex flex-col">
-          <label className="text-gray-400">Rozpoczęcie</label>
+          <label className="text-gray-500">Rozpoczęcie</label>
           <span>{startEvent}</span>
         </div>
         <div className="w-1/8 flex flex-col">
-          <label className="text-gray-400">Zakończenie</label>
+          <label className="text-gray-500">Zakończenie</label>
           <span>{endEvent}</span>
         </div>
         <div className="w-1/10 flex flex-col">
-          <label className="text-gray-400">Cena biletu</label>
+          <label className="text-gray-500">Cena biletu</label>
           <span>{event.price} zł</span>
         </div>
         <div className="w-1/8 flex flex-col">
-          <label className="text-gray-400">Liczba miejsc</label>
+          <label className="text-gray-500">Liczba miejsc</label>
           <span>{event.availableTickets}</span>
         </div>
         <div className="w-1/12 flex flex-col">
-          <label className="text-gray-400">Status</label>
+          <label className="text-gray-500">Status</label>
           <span>
             {event.isActive && <Badge variant={"green"}> Aktywne </Badge>}
             {!event.isActive && <Badge variant={"yellow"}> Nieaktywne </Badge>}
@@ -77,7 +77,7 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
 
           <div
             className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
-              !event.isActive
+              event.isActive
                 ? "opacity-40 pointer-events-none"
                 : "hover:bg-white hover:scale-110"
             }`}
@@ -94,15 +94,15 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
               className="object-cover w-1/4"
             />
             <div className="flex flex-col">
-              <label className="text-gray-400">Opis wydarzenia</label>
+              <label className="text-gray-500">Opis wydarzenia</label>
               <span>{event.description}</span>
             </div>
             <div className="flex flex-col">
-              <label className="text-gray-400">Miejsce wydarzenia</label>
+              <label className="text-gray-500">Miejsce wydarzenia</label>
               <span>Warszawa, Stadion Narodowy</span>
             </div>
             <div className="flex flex-col">
-              <label className="text-gray-400">Dostępne bilety</label>
+              <label className="text-gray-500">Dostępne bilety</label>
               <span>100, kupiono biletów: 1100 / 1200</span>
             </div>
           </div>
