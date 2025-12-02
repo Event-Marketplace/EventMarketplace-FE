@@ -1,0 +1,103 @@
+import { Badge } from "@/components/ui/badge";
+import { Event } from "@/lib/interfaces";
+import Image from "next/image";
+import { start } from "repl";
+import infoIcon from "@/images/info.svg";
+import editIcon from "@/images/pencil.svg";
+import removeIcon from "@/images/trash.svg";
+import { useState } from "react";
+
+type OrganizerEventCardProps = {
+  event: Event;
+};
+
+const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
+  const [openDetail, setOpenDetails] = useState<boolean>(false);
+  const imageSrc = event.imageUrl;
+
+  const startEvent = new Intl.DateTimeFormat("pl-PL", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(event.startDate));
+
+  const endEvent = new Intl.DateTimeFormat("pl-PL", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(event.endDate));
+
+  return (
+    <div className="w-full bg-gray-200 p-5 shadow-lg hover:bg-gray-300">
+      <div className="flex justify-between flex-wrap">
+        <div className="w-1/5 flex flex-col pr-2">
+          <label className="text-gray-400">Tytuł</label>
+          <span>{event.title}</span>
+        </div>
+        <div className="w-1/8 flex flex-col">
+          <label className="text-gray-400">Rozpoczęcie</label>
+          <span>{startEvent}</span>
+        </div>
+        <div className="w-1/8 flex flex-col">
+          <label className="text-gray-400">Zakończenie</label>
+          <span>{endEvent}</span>
+        </div>
+        <div className="w-1/10 flex flex-col">
+          <label className="text-gray-400">Cena biletu</label>
+          <span>{event.price} zł</span>
+        </div>
+        <div className="w-1/8 flex flex-col">
+          <label className="text-gray-400">Liczba miejsc</label>
+          <span>{event.availableTickets}</span>
+        </div>
+        <div className="w-1/12 flex flex-col">
+          <label className="text-gray-400">Status</label>
+          <span>
+            {event.isActive && <Badge variant={"green"}> Aktywne </Badge>}
+            {!event.isActive && <Badge variant={"yellow"}> Nieaktywne </Badge>}
+          </span>
+        </div>
+        <div className=" flex gap-2 items-center">
+          <div
+            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
+            onClick={() => {
+              setOpenDetails(!openDetail);
+            }}
+          >
+            <Image src={infoIcon} height={24} width={24} alt="info" />
+          </div>
+          <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
+            <Image src={editIcon} height={24} width={24} alt="edit" />
+          </div>
+          {!event.isActive && (
+            <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
+              <Image src={removeIcon} height={24} width={24} alt="remove" />
+            </div>
+          )}
+        </div>
+
+        {openDetail && (
+          <div className="bg-blue w-full pt-5 transition-all duration-500 ease-out flex flex-col gap-5">
+            <img
+              src={imageSrc}
+              alt="event-image"
+              className="object-cover w-1/4"
+            />
+            <div className="flex flex-col">
+              <label className="text-gray-400">Opis wydarzenia</label>
+              <span>{event.description}</span>
+            </div>
+            <div className="flex flex-col">
+              <label className="text-gray-400">Miejsce wydarzenia</label>
+              <span>Warszawa, Stadion Narodowy</span>
+            </div>
+            <div className="flex flex-col">
+              <label className="text-gray-400">Dostępne bilety</label>
+              <span>100, kupiono biletów: 1100 / 1200</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default OrganizerEventCard;

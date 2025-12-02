@@ -1,0 +1,14 @@
+export interface Event{
+    id:string;
+    title:string;
+    description:string;
+    startDate:string;
+    endDate:string;
+    price:number;
+    availableTickets:number;
+    imageUrl:string;
+    isActive:boolean;
+    createdAt:string;
+    organizerId: string;
+    organizer:string;
+};
