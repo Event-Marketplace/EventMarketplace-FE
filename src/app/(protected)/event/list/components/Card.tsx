@@ -5,6 +5,7 @@ import { start } from "repl";
 import infoIcon from "@/images/info.svg";
 import editIcon from "@/images/pencil.svg";
 import removeIcon from "@/images/trash.svg";
+import membersIcon from "@/images/users.svg";
 import { useState } from "react";
 
 type OrganizerEventCardProps = {
@@ -73,6 +74,10 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
           </div>
           <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
             <Image src={editIcon} height={24} width={24} alt="edit" />
+          </div>
+
+          <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
+            <Image src={membersIcon} height={24} width={24} alt="members" />
           </div>
 
           <div
