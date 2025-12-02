@@ -30,7 +30,14 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
       <div className="flex justify-between flex-wrap">
         <div className="w-1/5 flex flex-col pr-2">
           <label className="text-gray-400">Tytuł</label>
-          <span>{event.title}</span>
+          <span
+            className="hover: cursor-pointer"
+            onClick={() => {
+              setOpenDetails(!openDetail);
+            }}
+          >
+            {event.title}
+          </span>
         </div>
         <div className="w-1/8 flex flex-col">
           <label className="text-gray-400">Rozpoczęcie</label>
@@ -55,7 +62,7 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
             {!event.isActive && <Badge variant={"yellow"}> Nieaktywne </Badge>}
           </span>
         </div>
-        <div className=" flex gap-2 items-center">
+        <div className=" flex gap-2 items-center justify-between">
           <div
             className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
             onClick={() => {
@@ -67,11 +74,16 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
           <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
             <Image src={editIcon} height={24} width={24} alt="edit" />
           </div>
-          {!event.isActive && (
-            <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
-              <Image src={removeIcon} height={24} width={24} alt="remove" />
-            </div>
-          )}
+
+          <div
+            className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
+              !event.isActive
+                ? "opacity-40 pointer-events-none"
+                : "hover:bg-white hover:scale-110"
+            }`}
+          >
+            <Image src={removeIcon} height={24} width={24} alt="remove" />
+          </div>
         </div>
 
         {openDetail && (
