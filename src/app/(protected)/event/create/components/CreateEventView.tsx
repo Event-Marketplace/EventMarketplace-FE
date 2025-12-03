@@ -14,6 +14,7 @@ import { apiAxios, apiAxiosForm } from "@/lib/apiAxios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { LocationFields } from "./LocationFiels";
 
 const CreateEventView = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -29,6 +30,9 @@ const CreateEventView = () => {
     postalCode: "",
     city: "",
     street: "",
+    number: "",
+    descriptionEventPlace: "",
+    locationType: "address",
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
@@ -46,7 +50,7 @@ const CreateEventView = () => {
       if (key === "startDateTime")
         formData.append(key, startDate.toISOString());
       else if (key === "endDateTime")
-        formData.append(key, startDate.toISOString());
+        formData.append(key, endDate.toISOString());
       else formData.append(key, value);
     });
 
@@ -91,9 +95,36 @@ const CreateEventView = () => {
           return !value || new Date(value) >= new Date(startDateTime);
         }
       ),
-    city: Yup.string().required("Miasto jest wymagane"),
-    street: Yup.string().required("Ulica jest wymagana"),
-    postalCode: Yup.string().required("Kod pocztowy jest wymagany"),
+    city: Yup.string().when("locationType", {
+      is: "address",
+      then: (schema) => schema.required("Miasto jest wymagane"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+    street: Yup.string().when("locationType", {
+      is: "address",
+      then: (schema) => schema.required("Ulica jest wymagana"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+    postalCode: Yup.string().when("locationType", {
+      is: "address",
+      then: (schema) => schema.required("Kod pocztowy jest wymagany"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+    number: Yup.string().when("locationType", {
+      is: "address",
+      then: (schema) => schema.required("Number budynku/lokalu jest wymagany"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+    descriptionPlace: Yup.string().when("locationType", {
+      is: "descriptionEventPlace",
+      then: (schema) =>
+        schema.required("Opis miejsca wydarzenia jest wymagany"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
 
   return (
@@ -214,54 +245,33 @@ const CreateEventView = () => {
               </div>
 
               <div className="flex justify-start flex-col w-full flex-wrap xl:flex-nowrap gap-3">
-                <span className="mt-3 text-2xl mb-10">Miejsce wydarzenia</span>
-                <div className="flex flex-col gap-2 w-full xl:w-1/5">
-                  <label className="text-lg">
-                    Kod pocztowy
+                <div className="flex gap-6 items-center">
+                  <span className="flex text-2xl my-5">
+                    Miejsce wydarzenia:
+                  </span>
+                  <label className="flex items-center gap-2">
                     <Field
-                      as={InputEM}
-                      name="postalCode"
-                      type="text"
-                      placeholder="Wpisz kod pocztowy"
+                      type="radio"
+                      value="address"
+                      name="locationType"
+                      className="w-5 h-5"
                     />
-                    <ErrorMessage
-                      name="postalCode"
-                      component="div"
-                      className="text-red-500 text-sm"
+                    Dokładny adres
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <Field
+                      type="radio"
+                      value="descriptionPlace"
+                      name="locationType"
+                      className="w-5 h-5"
                     />
+                    Opis miejsca wydarzenia
                   </label>
                 </div>
-                <div className="flex flex-col gap-2  w-full xl:w-1/5">
-                  <label className="text-lg">
-                    Miasto
-                    <Field
-                      as={InputEM}
-                      name="city"
-                      type="text"
-                      placeholder="Wpisz miasto"
-                    />
-                    <ErrorMessage
-                      name="city"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </label>
-                </div>
-                <div className="flex flex-col gap-2 w-full xl:w-1/5">
-                  <label className="text-lg">
-                    Ulica
-                    <Field
-                      as={InputEM}
-                      name="street"
-                      type="text"
-                      placeholder="Wpisz ulicę"
-                    />
-                    <ErrorMessage
-                      name="street"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </label>
+
+                <div className="flex flex-col gap-2">
+                  <LocationFields />
                 </div>
               </div>
             </div>

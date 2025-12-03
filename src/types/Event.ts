@@ -8,4 +8,7 @@ export interface EventModel {
     postalCode: string;
     city:string;
     street:string;
+    number: string;
+    descriptionEventPlace: string;
+    locationType: string;
 }
