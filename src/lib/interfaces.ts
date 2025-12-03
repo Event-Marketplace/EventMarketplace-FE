@@ -11,4 +11,7 @@ export interface Event{
     createdAt:string;
     organizerId: string;
     organizer:string;
+    status: string;
+    statusDisplayName: string;
+    locationType: string;
 };

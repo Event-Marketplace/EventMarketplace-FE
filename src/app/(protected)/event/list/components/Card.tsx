@@ -7,6 +7,8 @@ import editIcon from "@/images/pencil.svg";
 import removeIcon from "@/images/trash.svg";
 import membersIcon from "@/images/users.svg";
 import { useState } from "react";
+import { statusVariantMap } from "@/lib/const";
+import { EventStatus } from "@/types/types";
 
 type OrganizerEventCardProps = {
   event: Event;
@@ -15,6 +17,8 @@ type OrganizerEventCardProps = {
 const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
+
+  console.log("event", event);
 
   const startEvent = new Intl.DateTimeFormat("pl-PL", {
     dateStyle: "medium",
@@ -28,8 +32,8 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
 
   return (
     <div className="w-full bg-gray-200 p-5 shadow-lg hover:bg-gray-300">
-      <div className="flex justify-between flex-wrap">
-        <div className="w-1/5 flex flex-col pr-2">
+      <div className="flex justify-between flex-wrap gap-3">
+        <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col pr-2">
           <label className="text-gray-500">Tytuł</label>
           <span
             className="hover: cursor-pointer"
@@ -40,27 +44,28 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
             <strong>{event.title}</strong>
           </span>
         </div>
-        <div className="w-1/8 flex flex-col">
+        <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col">
           <label className="text-gray-500">Rozpoczęcie</label>
           <span>{startEvent}</span>
         </div>
-        <div className="w-1/8 flex flex-col">
+        <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col">
           <label className="text-gray-500">Zakończenie</label>
           <span>{endEvent}</span>
         </div>
-        <div className="w-1/10 flex flex-col">
+        <div className="w-full md:w-1/5 xl:w-1/10 flex flex-col">
           <label className="text-gray-500">Cena biletu</label>
           <span>{event.price} zł</span>
         </div>
-        <div className="w-1/8 flex flex-col">
+        <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col">
           <label className="text-gray-500">Liczba miejsc</label>
           <span>{event.availableTickets}</span>
         </div>
-        <div className="w-1/12 flex flex-col">
+        <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col">
           <label className="text-gray-500">Status</label>
           <span>
-            {event.isActive && <Badge variant={"green"}> Aktywne </Badge>}
-            {!event.isActive && <Badge variant={"yellow"}> Nieaktywne </Badge>}
+            <Badge variant={statusVariantMap[event.status as EventStatus]}>
+              {event.statusDisplayName}
+            </Badge>
           </span>
         </div>
         <div className=" flex gap-2 items-center justify-between">
@@ -82,7 +87,7 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
 
           <div
             className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
-              event.isActive
+              event.status !== "Draft"
                 ? "opacity-40 pointer-events-none"
                 : "hover:bg-white hover:scale-110"
             }`}
