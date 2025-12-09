@@ -15,6 +15,8 @@ type ListWrapperProps<T> = {
   data: ListData<T>;
   onPageChange: (page: number) => void;
   filters?: React.ReactNode;
+  titleSection?: React.ReactNode;
+  visibleTotalCount?: boolean;
 };
 
 const ListWrapper = <T,>({
@@ -22,9 +24,16 @@ const ListWrapper = <T,>({
   data,
   onPageChange,
   filters,
+  titleSection,
+  visibleTotalCount,
 }: ListWrapperProps<T>) => {
   return (
     <div className="sm:p-8 p-0 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
+      {titleSection && (
+        <div className="flex xl:flex-col flex-row w-full gap-5 py-5">
+          {titleSection}
+        </div>
+      )}
       {filters && (
         <div className="flex flex-col xl:flex-row gap-5 bg-white p-5 shadow-md">
           {filters}
@@ -35,6 +44,7 @@ const ListWrapper = <T,>({
         totalPages={data.totalPages}
         totalCount={data.totalCount}
         onPageChange={onPageChange}
+        visibleTotalCount={visibleTotalCount}
         className="flex gap-5 justify-end p-2"
       />
       <div>{children}</div>
@@ -43,6 +53,7 @@ const ListWrapper = <T,>({
         totalPages={data.totalPages}
         totalCount={data.totalCount}
         onPageChange={onPageChange}
+        visibleTotalCount={visibleTotalCount}
         className="flex gap-5 justify-end p-2"
       />
     </div>

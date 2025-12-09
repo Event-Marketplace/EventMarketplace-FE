@@ -55,6 +55,8 @@ const PanelOrg = () => {
   const handleNav = (item: string) => {
     if (item === "Dodaj wydarzenie") {
       router.push("/event/create");
+    } else if (item === "Moje wydarzenia") {
+      router.push("event/list");
     }
   };
 

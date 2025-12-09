@@ -31,12 +31,17 @@ const Pagination = ({
 
   return (
     <div className={`flex items-center justify-end gap-3 p-2 ${className}`}>
-      {visibleTotalCount && <span>Ilość wydarzeń: {totalCount}</span>}
+      {visibleTotalCount && (
+        <span>
+          Ilość elementów: <strong>{totalCount}</strong>
+        </span>
+      )}
       <Button
         variant="outline"
         size="sm"
         onClick={handlePrev}
         disabled={currentPage === 1}
+        className="hover: cursor-pointer"
       >
         <ChevronLeft className="w-4 h-4" />
       </Button>
@@ -50,6 +55,7 @@ const Pagination = ({
         size="sm"
         onClick={handleNext}
         disabled={currentPage === totalPages}
+        className="hover: cursor-pointer"
       >
         <ChevronRight className="w-4 h-4" />
       </Button>
