@@ -23,21 +23,21 @@ const OrganizerEventList = () => {
   const [filters, setFilters] = useState<FilterProps>();
   const [statusOptions, setStatusOptions] = useState<[]>([]);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await apiAxios.get("Event/organizer", {
-          params: {
-            pageNumber: page,
-          },
-        });
-        setEvents(res.data.events);
-        setTotalItems(res.data.totalCount);
-      } catch {
-        console.log("error");
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const res = await apiAxios.get("Event/organizer", {
+        params: {
+          pageNumber: page,
+        },
+      });
+      setEvents(res.data.events);
+      setTotalItems(res.data.totalCount);
+    } catch {
+      console.log("error");
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, [page]);
 
@@ -77,6 +77,15 @@ const OrganizerEventList = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await apiAxios.delete(`Event/{${id}}`);
+      fetchEvents();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <OrganizerEventListHeader />
@@ -107,7 +116,11 @@ const OrganizerEventList = () => {
         <div className="w-full flex flex-col gap-10">
           <div className="flex flex-col gap-2">
             {events?.map((event) => (
-              <OrganizerEventCard key={event.id} event={event} />
+              <OrganizerEventCard
+                key={event.id}
+                event={event}
+                onDelete={() => handleDelete(event.id)}
+              />
             ))}
           </div>
         </div>

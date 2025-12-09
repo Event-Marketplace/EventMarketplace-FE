@@ -12,9 +12,10 @@ import { EventStatus } from "@/types/types";
 
 type OrganizerEventCardProps = {
   event: Event;
+  onDelete: () => void;
 };
 
-const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
+const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
 
@@ -27,6 +28,10 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(event.endDate));
+
+  const handleDeleteEvent = () => {
+    onDelete();
+  };
 
   return (
     <div className="w-full bg-gray-200 p-5 shadow-lg hover:bg-gray-300">
@@ -89,6 +94,7 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
                 ? "opacity-40 pointer-events-none"
                 : "hover:bg-white hover:scale-110"
             }`}
+            onClick={handleDeleteEvent}
           >
             <Image src={removeIcon} height={24} width={24} alt="remove" />
           </div>
