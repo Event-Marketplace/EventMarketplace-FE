@@ -7,6 +7,7 @@ import { Event } from "@/lib/interfaces";
 import { apiAxios } from "@/lib/apiAxios";
 import OrganizerEventCard from "./Card";
 import ListWrapper from "@/components/ui/list/ListWrapper";
+import { EventStatusBE } from "@/types/types";
 
 type FilterProps = {
   title?: string;
@@ -20,6 +21,7 @@ const OrganizerEventList = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [filters, setFilters] = useState<FilterProps>();
+  const [statusOptions, setStatusOptions] = useState<[]>([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -31,7 +33,6 @@ const OrganizerEventList = () => {
         });
         setEvents(res.data.events);
         setTotalItems(res.data.totalCount);
-        console.log("res", res);
       } catch {
         console.log("error");
       }
@@ -39,6 +40,19 @@ const OrganizerEventList = () => {
 
     fetchEvents();
   }, [page]);
+
+  useEffect(() => {
+    const fetchStatusOptions = async () => {
+      try {
+        const res = await apiAxios.get("Event/status-options");
+        setStatusOptions(res.data.result);
+        console.log("resdata", res.data);
+      } catch {
+        console.log("error");
+      }
+    };
+    fetchStatusOptions();
+  }, []);
 
   const handleChangePage = (newPage: number) => {
     setPage(newPage);
@@ -85,6 +99,7 @@ const OrganizerEventList = () => {
                 endDate: "",
               })
             }
+            options={statusOptions}
           />
         }
         visibleTotalCount={true}

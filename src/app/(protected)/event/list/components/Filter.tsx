@@ -1,6 +1,19 @@
 import { useState } from "react";
 import Image from "next/image";
 import trashIcon from "@/images/trash.svg";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type StatusOptionProps = {
+  statusIndex: number;
+  statusName: string;
+  statusDisplayName: string;
+};
 
 type OrganizerEventFilterProps = {
   onChange: (filters: {
@@ -10,11 +23,13 @@ type OrganizerEventFilterProps = {
     endDate?: string;
   }) => void;
   onClear: () => void;
+  options: StatusOptionProps[];
 };
 
 const OgranizerEventListFilter = ({
   onChange,
   onClear,
+  options,
 }: OrganizerEventFilterProps) => {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
@@ -35,7 +50,6 @@ const OgranizerEventListFilter = ({
 
   return (
     <>
-      {/* Input tekstowy */}
       <input
         type="text"
         placeholder="Szukaj wydarzenia..."
@@ -44,13 +58,25 @@ const OgranizerEventListFilter = ({
         className="border p-2 rounded flex-1"
       />
 
-      <input
-        type="text"
-        placeholder="Szukaj wydarzenia..."
+      <Select
         value={status}
-        onChange={(e) => setStatus(e.target.value)}
-        className="border p-2 rounded flex-1"
-      />
+        onValueChange={(v) => {
+          if (v === "__clear__") setStatus("");
+          else setStatus(v);
+        }}
+      >
+        <SelectTrigger className="w-64 h-[42px]">
+          <SelectValue placeholder="Wybierz status" />{" "}
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="__clear__">— Brak —</SelectItem>
+          {options.map((s) => (
+            <SelectItem key={s.statusIndex} value={String(s.statusName)}>
+              {s.statusDisplayName}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       <div className="flex gap-2 md:flex flex-wrap">
         <input
@@ -67,7 +93,13 @@ const OgranizerEventListFilter = ({
         />
       </div>
 
-      <button onClick={handleClear} className="cursor-pointer">
+      <button
+        onClick={() => {
+          handleClear();
+          setStatus("");
+        }}
+        className="cursor-pointer"
+      >
         <Image src={trashIcon} alt="sd" height={32} />
       </button>
       <button

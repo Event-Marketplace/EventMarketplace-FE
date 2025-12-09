@@ -18,8 +18,6 @@ const OrganizerEventCard = ({ event }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
 
-  console.log("event", event);
-
   const startEvent = new Intl.DateTimeFormat("pl-PL", {
     dateStyle: "medium",
     timeStyle: "short",

@@ -1,4 +1,5 @@
 import { BadgeProps } from "@/components/ui/badge";
+import { StringToBoolean } from "class-variance-authority/types";
 
 export type EventStatus =
   | "Draft"
@@ -10,3 +11,9 @@ export type EventStatus =
   | "DeletedByAdmin";
 
 export type BadgeVariant = BadgeProps["variant"];
+
+export type EventStatusBE = {
+  index: number;
+  name: string;
+  displayName: string;
+};
