@@ -8,6 +8,9 @@ import { apiAxios } from "@/lib/apiAxios";
 import OrganizerEventCard from "./Card";
 import ListWrapper from "@/components/ui/list/ListWrapper";
 import { EventStatusBE } from "@/types/types";
+import SideModalEM from "@/components/ui/modals/SideModalEM";
+import EditModal from "./EditEventModal";
+import EditEventModal from "./EditEventModal";
 
 type FilterProps = {
   title?: string;
@@ -22,6 +25,8 @@ const OrganizerEventList = () => {
   const [page, setPage] = useState<number>(1);
   const [filters, setFilters] = useState<FilterProps>();
   const [statusOptions, setStatusOptions] = useState<[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event>();
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const fetchEvents = async () => {
     try {
@@ -86,6 +91,15 @@ const OrganizerEventList = () => {
     }
   };
 
+  const handleOpenSideModal = (event: Event) => {
+    setSelectedEvent(event);
+    setOpenModal(true);
+  };
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <OrganizerEventListHeader />
@@ -120,11 +134,17 @@ const OrganizerEventList = () => {
                 key={event.id}
                 event={event}
                 onDelete={() => handleDelete(event.id)}
+                onOpenSideModal={() => handleOpenSideModal(event)}
               />
             ))}
           </div>
         </div>
       </ListWrapper>
+      <EditEventModal
+        event={selectedEvent}
+        open={openModal}
+        onClose={closeModal}
+      />
     </div>
   );
 };

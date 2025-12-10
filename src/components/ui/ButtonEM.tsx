@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-type ButtonProps = {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   kind: "primary" | "secondary" | "danger";
   type: "button" | "submit" | "reset";
   width?: number;
@@ -8,7 +8,7 @@ type ButtonProps = {
   style?: React.CSSProperties;
   onClick?: () => void;
   className?: string;
-};
+}
 
 const StyledButton = styled.button<ButtonProps>`
   padding: 10px 20px;
@@ -56,6 +56,7 @@ const ButtonEM = ({
   style,
   onClick,
   className,
+  ...props
 }: ButtonProps) => {
   return (
     <>
@@ -67,6 +68,7 @@ const ButtonEM = ({
         style={style}
         onClick={onClick}
         className={className}
+        {...props}
       >
         {text}
       </StyledButton>

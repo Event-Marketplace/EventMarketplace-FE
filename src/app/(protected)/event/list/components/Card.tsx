@@ -9,13 +9,19 @@ import membersIcon from "@/images/users.svg";
 import { useState } from "react";
 import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
+import SideModalEM from "@/components/ui/modals/SideModalEM";
 
 type OrganizerEventCardProps = {
   event: Event;
   onDelete: () => void;
+  onOpenSideModal: () => void;
 };
 
-const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
+const OrganizerEventCard = ({
+  event,
+  onDelete,
+  onOpenSideModal,
+}: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
 
@@ -80,7 +86,10 @@ const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
           >
             <Image src={infoIcon} height={24} width={24} alt="info" />
           </div>
-          <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
+          <div
+            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
+            onClick={onOpenSideModal}
+          >
             <Image src={editIcon} height={24} width={24} alt="edit" />
           </div>
 

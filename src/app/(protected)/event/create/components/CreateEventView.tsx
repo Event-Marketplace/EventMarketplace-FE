@@ -27,10 +27,12 @@ const CreateEventView = () => {
     availableTicketsCount: "",
     startDateTime: "",
     endDateTime: "",
-    postalCode: "",
-    city: "",
-    street: "",
-    number: "",
+    address: {
+      city: "",
+      street: "",
+      number: "",
+      postalCode: "",
+    },
     descriptionEventPlace: "",
     locationType: "address",
   };
