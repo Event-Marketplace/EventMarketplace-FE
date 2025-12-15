@@ -16,6 +16,6 @@ export interface Event{
     status: string;
     statusDisplayName: string;
     locationType: string;
-    address: Address | undefined
-    eventDescriptionPlace: string;
+    addressResponse: Address | null
+    descriptionEventPlace: string;
 };

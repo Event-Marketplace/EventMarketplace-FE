@@ -35,6 +35,8 @@ const OrganizerEventList = () => {
           pageNumber: page,
         },
       });
+
+      console.log("events from be", res.data.events);
       setEvents(res.data.events);
       setTotalItems(res.data.totalCount);
     } catch {
@@ -51,7 +53,6 @@ const OrganizerEventList = () => {
       try {
         const res = await apiAxios.get("Event/status-options");
         setStatusOptions(res.data.result);
-        console.log("resdata", res.data);
       } catch {
         console.log("error");
       }
@@ -141,6 +142,7 @@ const OrganizerEventList = () => {
         </div>
       </ListWrapper>
       <EditEventModal
+        onSuccess={fetchEvents}
         event={selectedEvent}
         open={openModal}
         onClose={closeModal}

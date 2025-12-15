@@ -7,7 +7,7 @@ export interface EventModel {
     endDateTime:string
     descriptionEventPlace: string;
     locationType: string;
-    address: Address | undefined,
+    address: Address | undefined | null,
 }
 
 export interface Address {

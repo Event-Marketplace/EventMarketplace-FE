@@ -20,6 +20,7 @@ import {
   FormTitle,
   AuthForm,
 } from "@/app/(auth)/CommonStyledComponents";
+import { AxiosError } from "axios";
 
 interface LoginValues {
   email: string;
@@ -75,8 +76,11 @@ const LoginView = () => {
       setTimeout(() => {
         router.push("/organizer-panel");
       }, 2000);
-    } catch (error) {
-      toast.error("Błąd połączenia z serwerem.");
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ error: string }>;
+      const message =
+        err?.response?.data?.error || "Wystąpił błąd na serwerze.";
+      toast.error(message);
     }
   };
 

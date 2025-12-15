@@ -37,7 +37,7 @@ const SideModalEM = ({
       <>
         <div
           className="fixed inset-0 bg-black/40"
-          //onClick={onClose} // kliknięcie w tło zamyka modal
+          onClick={onCancel} // kliknięcie w tło zamyka modal
         ></div>
         <div
           className="fixed top-0 right-0 p-5 flex flex-col gap-10 h-full w-1/3 bg-gray-200 z-999"

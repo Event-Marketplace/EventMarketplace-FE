@@ -122,8 +122,17 @@ const OrganizerEventCard = ({
             </div>
             <div className="flex flex-col">
               <label className="text-gray-500">Miejsce wydarzenia</label>
-              <span>Warszawa, Stadion Narodowy</span>
+              {event.locationType === "DescriptionPlace" ? (
+                <span>{event.descriptionEventPlace ?? "-"}</span>
+              ) : (
+                <span>
+                  Dokładna lokalizacja: {event.addressResponse?.postalCode} -{" "}
+                  {event.addressResponse?.city}, {event.addressResponse?.street}{" "}
+                  {event.addressResponse?.number}{" "}
+                </span>
+              )}
             </div>
+
             <div className="flex flex-col">
               <label className="text-gray-500">Dostępne bilety</label>
               <span>100, kupiono biletów: 1100 / 1200</span>

@@ -3,9 +3,12 @@
 import InputEM from "@/components/ui/InputEM";
 import SideModalEM from "@/components/ui/modals/SideModalEM";
 import UploadArea from "@/components/ui/uploadArea";
+import { apiAxios } from "@/lib/apiAxios";
 import { Event } from "@/lib/interfaces";
-import { EventModel } from "@/types/Event";
+import { diff, toDateTimeLocal } from "@/lib/reuseFunctions";
+import { Address, EventModel } from "@/types/Event";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { param } from "framer-motion/client";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -13,35 +16,87 @@ type EditEventModalProps = {
   open: boolean;
   onClose: () => void;
   event: Event | undefined;
+  onSuccess: () => void;
 };
 
-const EditEventModal = ({ open, onClose, event }: EditEventModalProps) => {
+const EditEventModal = ({
+  open,
+  onClose,
+  event,
+  onSuccess,
+}: EditEventModalProps) => {
   const [file, setFile] = useState<File | null>(null);
 
-  console.log("event", event);
+  console.log(`event_${event?.id}`, event);
 
   const initialValues: EventModel = {
     title: event?.title ?? "",
     description: event?.description ?? "",
     price: event?.price.toString() ?? "",
     availableTicketsCount: event?.availableTickets.toString() ?? "",
-    startDateTime: event?.startDate ?? "",
-    endDateTime: event?.endDate ?? "",
-    descriptionEventPlace: event?.eventDescriptionPlace ?? "",
+    startDateTime: event?.startDate ? toDateTimeLocal(event.startDate) : "",
+    endDateTime: event?.endDate ? toDateTimeLocal(event.endDate) : "",
+    descriptionEventPlace: event?.descriptionEventPlace ?? "",
     locationType: event?.locationType ?? "address",
-    address:
-      event?.address !== undefined
-        ? {
-            city: event.address.city,
-            number: event.address.number,
-            postalCode: event.address.postalCode,
-            street: event.address.street,
-          }
-        : undefined,
+    address: event?.addressResponse
+      ? {
+          city: event.addressResponse.city,
+          number: event.addressResponse.number,
+          postalCode: event.addressResponse.postalCode,
+          street: event.addressResponse.street,
+        }
+      : null,
   };
 
-  const handleSubmit = () => {
-    toast.success("Wysłałeś formularz!");
+  const handleSubmit = async (values: EventModel) => {
+    try {
+      // 1️⃣ Obliczamy różnicę między initialValues a values
+      const changed = diff(initialValues, values);
+
+      if (Object.keys(changed).length === 0 && !file) {
+        toast.success("Brak zmian do zapisania");
+        return;
+      }
+
+      // 2️⃣ Tworzymy FormData
+      const formData = new FormData();
+
+      formData.append("Title", values.title);
+      formData.append("Description", values.description);
+      formData.append("Price", values.price);
+      formData.append("AvailableTickets", values.availableTicketsCount);
+      formData.append(
+        "StartDateTime",
+        new Date(values.startDateTime).toISOString()
+      );
+      formData.append(
+        "EndDateTime",
+        new Date(values.endDateTime).toISOString()
+      );
+      formData.append("EventPlaceDescription", values.descriptionEventPlace);
+      formData.append("LocationType", values.locationType);
+
+      formData.append("City", values.address?.city ?? "");
+      formData.append("PostalCode", values.address?.postalCode ?? "");
+      formData.append("Street", values.address?.street ?? "");
+      formData.append("Number", values.address?.number ?? "");
+
+      if (file) formData.append("Image", file);
+
+      // 3️⃣ Wyślij PATCH
+      await apiAxios.patch(`/Event/${event?.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      toast.success("Zaktualizowano event!");
+      setTimeout(() => {
+        onSuccess();
+        onClose();
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      toast.error("Błąd przy aktualizacji eventu");
+    }
   };
 
   return (
@@ -53,7 +108,7 @@ const EditEventModal = ({ open, onClose, event }: EditEventModalProps) => {
       cancelText="dd"
       confirmText="ad"
       onCancel={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={() => handleSubmit}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form
@@ -153,6 +208,71 @@ const EditEventModal = ({ open, onClose, event }: EditEventModalProps) => {
               />
             </label>
           </div>
+          {event?.locationType === "DescriptionPlace" ? (
+            <div className="">
+              <label className="text-lg">
+                Opis miejsca wydarzenia
+                <Field
+                  as={InputEM}
+                  name="descriptionEventPlace"
+                  type="text"
+                  textarea
+                />
+                <ErrorMessage
+                  name="descriptionEventPlace"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+          ) : (
+            <>
+              <div className="">
+                <label className="text-lg">
+                  Kod pocztowy
+                  <Field as={InputEM} name="address.postalCode" type="text" />
+                  <ErrorMessage
+                    name="address.postalCode"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </label>
+              </div>
+              <div className="">
+                <label className="text-lg">
+                  Miasto
+                  <Field as={InputEM} name="address.city" type="text" />
+                  <ErrorMessage
+                    name="address.city"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </label>
+              </div>
+              <div className="">
+                <label className="text-lg">
+                  Ulica
+                  <Field as={InputEM} name="address.street" type="text" />
+                  <ErrorMessage
+                    name="address.street"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </label>
+              </div>
+              <div className="">
+                <label className="text-lg">
+                  Numer
+                  <Field as={InputEM} name="address.number" type="text" />
+                  <ErrorMessage
+                    name="address.number"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </label>
+              </div>
+            </>
+          )}
         </Form>
       </Formik>
     </SideModalEM>
