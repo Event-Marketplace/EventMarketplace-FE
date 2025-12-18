@@ -7,9 +7,10 @@ import { apiAxios } from "@/lib/apiAxios";
 import { Event } from "@/lib/interfaces";
 import { diff, toDateTimeLocal } from "@/lib/reuseFunctions";
 import { Address, EventModel } from "@/types/Event";
+import { LocationType } from "@/types/types";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { param } from "framer-motion/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 type EditEventModalProps = {
@@ -26,8 +27,8 @@ const EditEventModal = ({
   onSuccess,
 }: EditEventModalProps) => {
   const [file, setFile] = useState<File | null>(null);
-
-  console.log(`event_${event?.id}`, event);
+  const [locationType, setLocationType] = useState<LocationType>();
+  console.log("event", event);
 
   const initialValues: EventModel = {
     title: event?.title ?? "",
@@ -37,7 +38,7 @@ const EditEventModal = ({
     startDateTime: event?.startDate ? toDateTimeLocal(event.startDate) : "",
     endDateTime: event?.endDate ? toDateTimeLocal(event.endDate) : "",
     descriptionEventPlace: event?.descriptionEventPlace ?? "",
-    locationType: event?.locationType ?? "address",
+    locationType: event?.locationType ?? "Address",
     address: event?.addressResponse
       ? {
           city: event.addressResponse.city,
@@ -111,169 +112,205 @@ const EditEventModal = ({
       onSubmit={() => handleSubmit}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        <Form
-          className="flex w-[98%] flex-col h-auto rounded-lg gap-3"
-          id="edit-event-form"
-        >
-          <div className="w-full">
-            <UploadArea onFileSelect={setFile} />
-          </div>
-          <div className="">
-            <label className="text-lg">Wgrane zdjęcie: </label>
-            {event?.imageUrl && (
-              <img
-                src={event.imageUrl}
-                alt="zdjecie wgrane"
-                width={200}
-                height={200}
-              />
+        {({ values }) => (
+          <Form
+            className="flex w-[98%] flex-col h-auto rounded-lg gap-3"
+            id="edit-event-form"
+          >
+            <div className="w-full">
+              <UploadArea onFileSelect={setFile} visibleClear />
+            </div>
+            {file === null && (
+              <div className="">
+                <label className="text-lg">Wgrane zdjęcie: </label>
+                {event?.imageUrl && (
+                  <img
+                    src={event.imageUrl}
+                    alt="zdjecie wgrane"
+                    width={200}
+                    height={200}
+                  />
+                )}
+              </div>
             )}
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Tytuł wydarzenia
-              <Field as={InputEM} name="title" placeholder="Wpisz tytuł" />
-              <ErrorMessage
-                name="title"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Opis wydarzenia
-              <Field
-                as={InputEM}
-                name="description"
-                placeholder="Wpisz tytuł"
-                textarea
-              />
-              <ErrorMessage
-                name="description"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Cena biletu
-              <Field as={InputEM} name="price" type="number" placeholder="0" />
-              <ErrorMessage
-                name="price"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Liczba dostępnych biletów
-              <Field
-                as={InputEM}
-                name="availableTicketsCount"
-                type="number"
-                placeholder="0"
-              />
-              <ErrorMessage
-                name="availableTicketsCount"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Data i godzina rozpoczęcia
-              <Field as={InputEM} name="startDateTime" type="datetime-local" />
-              <ErrorMessage
-                name="startDateTime"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-lg">
-              Data i godzina zakończenia
-              <Field as={InputEM} name="endDateTime" type="datetime-local" />
-              <ErrorMessage
-                name="endDateTime"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </label>
-          </div>
-          {event?.locationType === "DescriptionPlace" ? (
-            <div className="">
+            <div className="flex flex-col gap-2">
               <label className="text-lg">
-                Opis miejsca wydarzenia
-                <Field
-                  as={InputEM}
-                  name="descriptionEventPlace"
-                  type="text"
-                  textarea
-                />
+                Tytuł wydarzenia
+                <Field as={InputEM} name="title" placeholder="Wpisz tytuł" />
                 <ErrorMessage
-                  name="descriptionEventPlace"
+                  name="title"
                   component="div"
                   className="text-red-500 text-sm"
                 />
               </label>
             </div>
-          ) : (
-            <>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-lg">
+                Opis wydarzenia
+                <Field
+                  as={InputEM}
+                  name="description"
+                  placeholder="Wpisz tytuł"
+                  textarea
+                />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-lg">
+                Cena biletu
+                <Field
+                  as={InputEM}
+                  name="price"
+                  type="number"
+                  placeholder="0"
+                />
+                <ErrorMessage
+                  name="price"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-lg">
+                Liczba dostępnych biletów
+                <Field
+                  as={InputEM}
+                  name="availableTicketsCount"
+                  type="number"
+                  placeholder="0"
+                />
+                <ErrorMessage
+                  name="availableTicketsCount"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-lg">
+                Data i godzina rozpoczęcia
+                <Field
+                  as={InputEM}
+                  name="startDateTime"
+                  type="datetime-local"
+                />
+                <ErrorMessage
+                  name="startDateTime"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-lg">
+                Data i godzina zakończenia
+                <Field as={InputEM} name="endDateTime" type="datetime-local" />
+                <ErrorMessage
+                  name="endDateTime"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </label>
+            </div>
+
+            <div className="">
+              <span className="flex text-2xl my-5">Miejsce wydarzenia:</span>
+              <label className="flex items-center gap-2">
+                <Field
+                  type="radio"
+                  value="Address"
+                  name="locationType"
+                  className="w-5 h-5"
+                />
+                Dokładny adres
+              </label>
+              <label className="flex items-center gap-2">
+                <Field
+                  type="radio"
+                  value="DescriptionPlace"
+                  name="locationType"
+                  className="w-5 h-5"
+                />
+                Opis miejsca wydarzenia
+              </label>
+            </div>
+
+            {values.locationType === "DescriptionPlace" ? (
               <div className="">
                 <label className="text-lg">
-                  Kod pocztowy
-                  <Field as={InputEM} name="address.postalCode" type="text" />
+                  Opis miejsca wydarzenia
+                  <Field
+                    as={InputEM}
+                    name="descriptionEventPlace"
+                    type="text"
+                    textarea
+                  />
                   <ErrorMessage
-                    name="address.postalCode"
+                    name="descriptionEventPlace"
                     component="div"
                     className="text-red-500 text-sm"
                   />
                 </label>
               </div>
-              <div className="">
-                <label className="text-lg">
-                  Miasto
-                  <Field as={InputEM} name="address.city" type="text" />
-                  <ErrorMessage
-                    name="address.city"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </label>
-              </div>
-              <div className="">
-                <label className="text-lg">
-                  Ulica
-                  <Field as={InputEM} name="address.street" type="text" />
-                  <ErrorMessage
-                    name="address.street"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </label>
-              </div>
-              <div className="">
-                <label className="text-lg">
-                  Numer
-                  <Field as={InputEM} name="address.number" type="text" />
-                  <ErrorMessage
-                    name="address.number"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </label>
-              </div>
-            </>
-          )}
-        </Form>
+            ) : (
+              <>
+                <div className="">
+                  <label className="text-lg">
+                    Kod pocztowy
+                    <Field as={InputEM} name="address.postalCode" type="text" />
+                    <ErrorMessage
+                      name="address.postalCode"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </label>
+                </div>
+                <div className="">
+                  <label className="text-lg">
+                    Miasto
+                    <Field as={InputEM} name="address.city" type="text" />
+                    <ErrorMessage
+                      name="address.city"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </label>
+                </div>
+                <div className="">
+                  <label className="text-lg">
+                    Ulica
+                    <Field as={InputEM} name="address.street" type="text" />
+                    <ErrorMessage
+                      name="address.street"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </label>
+                </div>
+                <div className="">
+                  <label className="text-lg">
+                    Numer
+                    <Field as={InputEM} name="address.number" type="text" />
+                    <ErrorMessage
+                      name="address.number"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </label>
+                </div>
+              </>
+            )}
+          </Form>
+        )}
       </Formik>
     </SideModalEM>
   );

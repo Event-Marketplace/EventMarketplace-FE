@@ -48,13 +48,26 @@ const CreateEventView = () => {
     }
 
     const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (key === "startDateTime")
-        formData.append(key, startDate.toISOString());
-      else if (key === "endDateTime")
-        formData.append(key, endDate.toISOString());
-      else formData.append(key, value);
-    });
+
+    formData.append("Title", values.title);
+    formData.append("Description", values.description);
+    formData.append("Price", values.price);
+    formData.append("AvailableTickets", values.availableTicketsCount);
+    formData.append(
+      "StartDateTime",
+      new Date(values.startDateTime).toISOString()
+    );
+    formData.append("EndDateTime", new Date(values.endDateTime).toISOString());
+    formData.append("EventPlaceDescription", values.descriptionEventPlace);
+    formData.append("LocationType", values.locationType);
+
+    formData.append("City", values.address?.city ?? "");
+    formData.append("PostalCode", values.address?.postalCode ?? "");
+    formData.append("Street", values.address?.street ?? "");
+    formData.append("Number", values.address?.number ?? "");
+
+    if (file) formData.append("Image", file);
+    formData.append("EventPlaceDescription", values.descriptionEventPlace);
 
     if (file) {
       formData.append("image", file);

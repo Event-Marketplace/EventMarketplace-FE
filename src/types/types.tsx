@@ -17,3 +17,10 @@ export type EventStatusBE = {
   name: string;
   displayName: string;
 };
+
+export const LOCATION_TYPE = {
+  ADDRESS: "Address",
+  PLACE_DESCRIPTION: "DescriptionPlace",
+} as const;
+
+export type LocationType = (typeof LOCATION_TYPE)[keyof typeof LOCATION_TYPE];
