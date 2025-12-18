@@ -116,6 +116,7 @@ const OrganizerEventCard = ({
               alt="event-image"
               className="object-cover w-1/4"
             />
+
             <div className="flex flex-col">
               <label className="text-gray-500">Opis wydarzenia</label>
               <span>{event.description}</span>
