@@ -2,15 +2,22 @@ import { useState } from "react";
 import trashIcon from "@/images/trash.svg";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import deleteIcon from "@/images/trash.svg";
 
 type UploadAreaProps = {
   onFileSelect: (file: File | null) => void;
+  visibleClear?: boolean;
 };
 
-const UploadArea = ({ onFileSelect }: UploadAreaProps) => {
+const UploadArea = ({ onFileSelect, visibleClear }: UploadAreaProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const allowedTypes = ["image/png", "image/jpeg"];
+
+  const handleClear = () => {
+    setFile(null);
+    setPreview(null);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]; // <--- tu pobierasz plik
@@ -75,11 +82,21 @@ const UploadArea = ({ onFileSelect }: UploadAreaProps) => {
           )}
         </label>
         {preview && (
-          <img
-            src={preview}
-            alt="Podgląd"
-            className="mt-4 h-50 object-cover rounded-lg shadow-md "
-          />
+          <div className="flex flex-col justify-center gap-1 items-center">
+            <img
+              src={preview}
+              alt="Podgląd"
+              className="mt-4 h-50 object-cover rounded-lg shadow-md "
+            />
+            {visibleClear && (
+              <Image
+                src={deleteIcon}
+                alt="deleteIcon"
+                width={40}
+                onClick={handleClear}
+              />
+            )}
+          </div>
         )}
       </div>
     </>

@@ -12,7 +12,7 @@ export const GlobalHeader = styled.header`
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
   position: fixed;
   width: 100vw;
-  z-index: 999;
+  z-index: 500;
   color: white;
 `;
 
@@ -55,7 +55,6 @@ export const GlobalContent = styled.div`
   background-color: white;
   height: auto;
   min-height: calc(100vh - 483px);
-  z-index: 1;
   padding: 50px;
   top: 100px;
   position: relative;

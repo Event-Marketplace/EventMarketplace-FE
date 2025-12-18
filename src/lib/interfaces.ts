@@ -1,3 +1,5 @@
+import { Address } from "@/types/Event";
+
 export interface Event{
     id:string;
     title:string;
@@ -14,4 +16,6 @@ export interface Event{
     status: string;
     statusDisplayName: string;
     locationType: string;
+    addressResponse: Address | null
+    descriptionEventPlace: string;
 };

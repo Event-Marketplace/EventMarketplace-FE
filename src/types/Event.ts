@@ -5,10 +5,14 @@ export interface EventModel {
     availableTicketsCount: string;
     startDateTime:string;
     endDateTime:string
-    postalCode: string;
-    city:string;
-    street:string;
-    number: string;
     descriptionEventPlace: string;
     locationType: string;
+    address: Address | undefined | null,
+}
+
+export interface Address {
+    city: string;
+    number:string;
+    postalCode: string;
+    street: string
 }

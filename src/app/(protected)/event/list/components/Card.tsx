@@ -9,13 +9,19 @@ import membersIcon from "@/images/users.svg";
 import { useState } from "react";
 import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
+import SideModalEM from "@/components/ui/modals/SideModalEM";
 
 type OrganizerEventCardProps = {
   event: Event;
   onDelete: () => void;
+  onOpenSideModal: () => void;
 };
 
-const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
+const OrganizerEventCard = ({
+  event,
+  onDelete,
+  onOpenSideModal,
+}: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
 
@@ -80,7 +86,10 @@ const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
           >
             <Image src={infoIcon} height={24} width={24} alt="info" />
           </div>
-          <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
+          <div
+            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
+            onClick={onOpenSideModal}
+          >
             <Image src={editIcon} height={24} width={24} alt="edit" />
           </div>
 
@@ -113,8 +122,17 @@ const OrganizerEventCard = ({ event, onDelete }: OrganizerEventCardProps) => {
             </div>
             <div className="flex flex-col">
               <label className="text-gray-500">Miejsce wydarzenia</label>
-              <span>Warszawa, Stadion Narodowy</span>
+              {event.locationType === "DescriptionPlace" ? (
+                <span>{event.descriptionEventPlace ?? "-"}</span>
+              ) : (
+                <span>
+                  Dokładna lokalizacja: {event.addressResponse?.postalCode} -{" "}
+                  {event.addressResponse?.city}, {event.addressResponse?.street}{" "}
+                  {event.addressResponse?.number}{" "}
+                </span>
+              )}
             </div>
+
             <div className="flex flex-col">
               <label className="text-gray-500">Dostępne bilety</label>
               <span>100, kupiono biletów: 1100 / 1200</span>
