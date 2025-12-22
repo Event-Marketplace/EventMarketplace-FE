@@ -30,8 +30,6 @@ import { AppDispatch, AppState } from "@/redux/store";
 import { decodeJwt } from "jose";
 import { clearAccessToken, setAccessToken } from "@/redux/auth/authSlice";
 import { apiAxios } from "@/lib/apiAxios";
-import decodeToken from "@/lib/decodeToken";
-import { setuid } from "process";
 
 type GlobalLayoutProps = {
   children: React.ReactNode;
@@ -47,6 +45,9 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const accessToken = useSelector((state: AppState) => state.auth.accessToken);
   const userEmail = useSelector((state: AppState) => state.auth.userEmail);
+  const currentContext = useSelector(
+    (state: AppState) => state.auth.currentContext
+  );
 
   useEffect(() => {
     const init = async () => {
@@ -87,6 +88,10 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/login");
   };
 
+  const handleDashboard = () => {
+    router.push("/dashboard");
+  };
+
   if (isAuthenticated === null) {
     return <div className="w-full h-24 bg-[#772626] animate-pulse shadow-md" />;
   }
@@ -97,7 +102,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
         <GlobalBox>
           <GlobalHeader>
             <div className="flex justify-start items-center gap-8">
-              <LogoClicked src={logoWithTextIcon} alt="logo" width={150} />
+              <LogoClicked
+                src={logoWithTextIcon}
+                alt="logo"
+                width={150}
+                onClick={handleDashboard}
+              />
             </div>
 
             <HeaderPanelMenu>
@@ -112,11 +122,10 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
               <MobileMenu aria-label="Mobilne menu nawigacyjne">
                 <>
                   <div className="flex flex-wrap items-center text-2xl border border-x-10 px-2 gap-5">
-                    <strong>Organizator </strong> {userEmail}
+                    <strong>{currentContext ?? "Użytkownik"} </strong>
+                    {userEmail}
                   </div>
-                  <HeaderLink onClick={handleOrganizer}>
-                    Panel organizatora
-                  </HeaderLink>
+
                   <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
                 </>
               </MobileMenu>
@@ -124,11 +133,10 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
             <HeaderPanelSection aria-label="Główne menu nawigacyjne">
               <>
                 <div className="flex flex-wrap items-center text-2xl border border-x-10 px-2 gap-5">
-                  <strong>Organizator </strong> {userEmail}
+                  <strong>{currentContext ?? "Użytkownik"} </strong>
+                  {userEmail}
                 </div>
-                <HeaderLink onClick={handleOrganizer}>
-                  Panel organizatora
-                </HeaderLink>
+
                 <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
               </>
             </HeaderPanelSection>

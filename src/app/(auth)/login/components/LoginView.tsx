@@ -74,7 +74,7 @@ const LoginView = () => {
 
       toast.success("Zostałeś poprawnie zalogowany.");
       setTimeout(() => {
-        router.push("/organizer-panel");
+        router.push("/dashboard");
       }, 2000);
     } catch (error: unknown) {
       const err = error as AxiosError<{ error: string }>;

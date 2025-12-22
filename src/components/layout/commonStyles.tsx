@@ -19,7 +19,7 @@ export const GlobalHeader = styled.header`
 export const HeaderPanelSection = styled.nav`
   display: flex;
   gap: 20px;
-  font-size: 22px;
+  font-size: 20px;
 
   @media (max-width: ${breakpoints.laptop}) {
     display: none;
