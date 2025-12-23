@@ -2,6 +2,7 @@
 
 import { setCurrentContext } from "@/redux/auth/authSlice";
 import { AppState } from "@/redux/store";
+import { Roles } from "@/types/types";
 import { stat } from "fs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,28 +19,39 @@ const UserDashboard = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (currentContext === null) dispatch(setCurrentContext(null));
-    if (roles.length === 1) {
-      if (roles.includes("Organizer")) router.push("/organizer-panel");
-      if (roles.includes("Admin")) router.push("/admin-panel");
-      if (roles.includes("Member")) router.push("/member-panel");
-    }
-  }, []);
+    if (roles.length !== 1) return;
 
-  const handlePanel = (role: string) => {
+    const role = roles[0] as "Admin" | "Organizer" | "Member";
+
+    dispatch(setCurrentContext(role));
+    localStorage.setItem("currentContext", role);
+
+    if (role === "Admin") router.push("/admin-panel");
+    if (role === "Organizer") router.push("/organizer-panel");
+    if (role === "Member") router.push("/member-panel");
+  }, [roles, dispatch, router]);
+
+  useEffect(() => {
+    if (!currentContext) return;
+    if (!roles.includes(currentContext)) {
+      dispatch(setCurrentContext(null));
+      localStorage.removeItem("currentContext");
+    }
+  }, [roles, currentContext, dispatch]);
+
+  const handlePanel = (role: Roles) => {
+    if (!role) return;
+
+    dispatch(setCurrentContext(role));
+    localStorage.setItem("currentContext", role);
+
     if (role === "Member") {
-      dispatch(setCurrentContext("Member"));
-      localStorage.setItem("currentContext", "Member");
       router.push("/member-panel");
     }
     if (role === "Organizer") {
-      dispatch(setCurrentContext("Organizer"));
-      localStorage.setItem("currentContext", "Organizer");
       router.push("/organizer-panel");
     }
     if (role === "Admin") {
-      dispatch(setCurrentContext("Admin"));
-      localStorage.setItem("currentContext", "Admin");
       router.push("/admin-panel");
     }
   };
@@ -55,7 +67,7 @@ const UserDashboard = () => {
           {roles.map((item, index) => (
             <div
               key={index}
-              className="bg-red-200 p-10 rounded-2xl hover:cursor-pointer hover:bg-red-300 transition-colors duration-300"
+              className="flex justify-center items-center bg-red-200 p-10 rounded-2xl hover:cursor-pointer hover:bg-red-300 transition-colors duration-300 w-50"
               onClick={() => {
                 handlePanel(item);
               }}

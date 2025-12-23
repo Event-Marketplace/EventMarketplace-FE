@@ -1,21 +1,15 @@
 import decodeToken from "@/lib/decodeToken";
+import { Roles } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
 
 interface AuthState{
     accessToken: string | null;
     userEmail: string | null;
     roles: string[];
-    currentContext: "Admin" | "Organizer" | "Member" | null;
+    currentContext: Roles
 }
 
-const savedContext = localStorage.getItem("currentContext") as
-  | "Admin"
-  | "Organizer"
-  | "Member"
-  | null;
-
-const initialState: AuthState = {accessToken: null, userEmail: null, roles: [], currentContext: savedContext}
+const initialState: AuthState = {accessToken: null, userEmail: null, roles: [], currentContext: null}
 const roleClaimKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
 
 const authSlice = createSlice({
@@ -34,7 +28,7 @@ const authSlice = createSlice({
             state.roles = [];
             state.currentContext = null;
         },
-        setCurrentContext(state, action: PayloadAction<"Admin" | "Organizer" | "Member" | null>) {
+        setCurrentContext(state, action: PayloadAction<Roles>) {
             state.currentContext = action.payload;
         },
     },

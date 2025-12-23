@@ -28,8 +28,13 @@ import { UserProvider } from "@/context/UserContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "@/redux/store";
 import { decodeJwt } from "jose";
-import { clearAccessToken, setAccessToken } from "@/redux/auth/authSlice";
+import {
+  clearAccessToken,
+  setAccessToken,
+  setCurrentContext,
+} from "@/redux/auth/authSlice";
 import { apiAxios } from "@/lib/apiAxios";
+import { Roles } from "@/types/types";
 
 type GlobalLayoutProps = {
   children: React.ReactNode;
@@ -48,6 +53,16 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
   const currentContext = useSelector(
     (state: AppState) => state.auth.currentContext
   );
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedContext = localStorage.getItem("currentContext") as Roles;
+
+      if (savedContext) {
+        dispatch(setCurrentContext(savedContext));
+      }
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const init = async () => {
@@ -72,10 +87,6 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
     );
   }
 
-  const handleOrganizer = () => {
-    router.push("/organizer-panel");
-  };
-
   const handleLogout = async () => {
     try {
       await apiAxios.post("User/logout");
@@ -84,12 +95,19 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
       console.log("Logout errors.");
     }
 
+    localStorage.removeItem("currentContext");
     dispatch(clearAccessToken());
     router.push("/login");
   };
 
   const handleDashboard = () => {
+    localStorage.removeItem("currentContext");
+    dispatch(setCurrentContext("null"));
     router.push("/dashboard");
+  };
+
+  const handleOrganizerPanel = () => {
+    router.push("/organizer-panel");
   };
 
   if (isAuthenticated === null) {
@@ -126,6 +144,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
                     {userEmail}
                   </div>
 
+                  {currentContext === "Organizer" && (
+                    <HeaderLink onClick={handleOrganizerPanel}>
+                      Panel Organizatora
+                    </HeaderLink>
+                  )}
+
                   <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
                 </>
               </MobileMenu>
@@ -136,6 +160,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
                   <strong>{currentContext ?? "Użytkownik"} </strong>
                   {userEmail}
                 </div>
+
+                {currentContext === "Organizer" && (
+                  <HeaderLink onClick={handleOrganizerPanel}>
+                    Panel Organizatora
+                  </HeaderLink>
+                )}
 
                 <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
               </>

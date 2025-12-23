@@ -107,7 +107,7 @@ const PanelOrg = () => {
                 <div
                   onClick={() => handleNav(item)}
                   key={index}
-                  className="bg-red-400 border-red-500 border-5 rounded-lg w-1/4 h-1/4 flex justify-center items-center text-2xl hover:bg-red-500 hover:text-white cursor-pointer"
+                  className="bg-red-400 border-red-500 border-5 rounded-lg w-1/4 h-1/4 flex justify-center items-center text-2xl hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300"
                 >
                   {item}
                 </div>

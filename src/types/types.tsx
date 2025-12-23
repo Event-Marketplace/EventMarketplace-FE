@@ -24,3 +24,12 @@ export const LOCATION_TYPE = {
 } as const;
 
 export type LocationType = (typeof LOCATION_TYPE)[keyof typeof LOCATION_TYPE];
+
+export const ROLES = {
+  ADMIN: "Admin",
+  ORGANIZER: "Organizer",
+  MEMBER: "Member",
+  NULL: null,
+};
+
+export type Roles = (typeof ROLES)[keyof typeof ROLES];
