@@ -41,6 +41,7 @@ Podział na:
 -  services (komunikacja z API)
 -  hooks
 
+Dodatkowo:
 - Centralna obsługa autoryzacji
 - Interceptory requestów HTTP
 
