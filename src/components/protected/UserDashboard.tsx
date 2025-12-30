@@ -21,14 +21,14 @@ const UserDashboard = () => {
   useEffect(() => {
     if (roles.length !== 1) return;
 
-    const role = roles[0] as "Admin" | "Organizer" | "Member";
+    const role = roles[0] as "Admin" | "Organizer" | "Participant";
 
     dispatch(setCurrentContext(role));
     localStorage.setItem("currentContext", role);
 
     if (role === "Admin") router.push("/admin-panel");
     if (role === "Organizer") router.push("/organizer-panel");
-    if (role === "Member") router.push("/member-panel");
+    if (role === "Participant") router.push("/participant-panel");
   }, [roles, dispatch, router]);
 
   useEffect(() => {
@@ -45,8 +45,8 @@ const UserDashboard = () => {
     dispatch(setCurrentContext(role));
     localStorage.setItem("currentContext", role);
 
-    if (role === "Member") {
-      router.push("/member-panel");
+    if (role === "Participant") {
+      router.push("/participant-panel");
     }
     if (role === "Organizer") {
       router.push("/organizer-panel");

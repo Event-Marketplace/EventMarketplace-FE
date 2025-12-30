@@ -1,4 +1,4 @@
-const PanelMember = () => {
+const PanelParticipant = () => {
   return (
     <div className="">
       <div className="">Panel uczestnika</div>
@@ -6,4 +6,4 @@ const PanelMember = () => {
   );
 };
 
-export default PanelMember;
+export default PanelParticipant;
