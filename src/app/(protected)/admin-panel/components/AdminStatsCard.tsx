@@ -26,7 +26,15 @@ const AdminStatsCard: React.FC<StatsProps> = ({ stats }) => {
   return (
     <div className="bg-white shadow-2xl w-full p-5 rounded-lg hover:bg-gray-200 transition-color duration-200 flex  ease-out hover:scale-[1.02] flex flex-col md:flex-row gap-6">
       <div className="flex-1 flex flex-col">
-        <p className="text-2xl font-semibold">Statystyki</p>
+        <div className="flex justify-between items-center gap-5">
+          <p className="text-4xl font-semibold">Statystyki</p>
+          <img
+            className="w-full max-w-[80px]"
+            src="https://longicodeitstorage.blob.core.windows.net/sharedimages/pie-chart-149727_1280.png"
+            alt="pie-chart"
+          />
+        </div>
+
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {statsArray.map((stat, index) => (
             <div
@@ -41,14 +49,6 @@ const AdminStatsCard: React.FC<StatsProps> = ({ stats }) => {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="md:w-1/3 flex justify-center md:justify-end">
-        <img
-          className="w-full max-w-[400px]"
-          src="https://longicodeitstorage.blob.core.windows.net/sharedimages/pie-chart-149727_1280.png"
-          alt="pie-chart"
-        />
       </div>
     </div>
   );

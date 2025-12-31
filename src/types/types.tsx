@@ -43,3 +43,13 @@ export interface AdminStats {
   totalParticipants: number;
   totalEvents: number;
 }
+
+export interface PendingEvents {
+  title: string;
+  organizer: string;
+}
+
+export interface AdminAlerts {
+  pendingEvents: PendingEvents[];
+  pendingEventsCount: number;
+}

@@ -154,7 +154,7 @@ const RegisterView = () => {
               />
               <p>
                 Posiadasz już konto? Zaloguj się{" "}
-                <a href="/auth/login" style={{ textDecorationColor: "blue" }}>
+                <a href="/login" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>

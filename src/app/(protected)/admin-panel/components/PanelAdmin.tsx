@@ -2,7 +2,7 @@
 
 import ButtonEM from "@/components/ui/ButtonEM";
 import { apiAxios } from "@/lib/apiAxios";
-import { AdminStats } from "@/types/types";
+import { AdminAlerts, AdminStats } from "@/types/types";
 import { stat } from "fs";
 import { useEffect, useState } from "react";
 import AdminStatsCard from "./AdminStatsCard";
@@ -10,6 +10,7 @@ import AdminAlertsCard from "./AdminAlertsCard";
 
 const PanelAdmin = () => {
   const [stats, setStats] = useState<AdminStats>();
+  const [alerts, setAlerts] = useState<AdminAlerts>();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -22,6 +23,19 @@ const PanelAdmin = () => {
     };
 
     fetchStats();
+  }, []);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        const res = await apiAxios.get("Admin/alerts");
+        setAlerts(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchAlerts();
   }, []);
 
   const handleEvents = () => {
@@ -52,32 +66,34 @@ const PanelAdmin = () => {
     { label: "Profil", handle: handleProfile },
   ];
 
-  if (stats) {
-    return (
-      <div className="flex flex-col gap-15 max-w-[1920px] mx-auto">
-        <div className="flex p-5 bg-red-900/40 rounded-md shadow-inner">
-          <div className="flex w-full gap-10">
-            {actionButtons.map((btn, index) => (
-              <ButtonEM
-                type="button"
-                key={index}
-                kind="secondary"
-                text={btn.label}
-                onClick={btn.handle}
-                style={{ width: "100%" }}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="space-y-10">
-          <hr />
-          <AdminStatsCard stats={stats} />
-          <hr />
-          <AdminAlertsCard />
+  return (
+    <div className="flex flex-col gap-15 max-w-[1920px] mx-auto">
+      <div className="flex flex-col gap-5 p-5 bg-red-900/40 rounded-md shadow-inner py-10">
+        <label className="text-white font-semibold italic text-2xl sm:text-3xl md:text-4xl flex justify-center">
+          Panel Administratora
+        </label>
+        <hr />
+        <div className="flex w-full justify-center gap-5 flex-wrap">
+          {actionButtons.map((btn, index) => (
+            <ButtonEM
+              type="button"
+              key={index}
+              kind="secondary"
+              text={btn.label}
+              onClick={btn.handle}
+            />
+          ))}
         </div>
       </div>
-    );
-  }
+      <div className="space-y-10">
+        <hr />
+        {stats && <AdminStatsCard stats={stats} />}
+        <hr />
+        <AdminAlertsCard alerts={alerts} />
+        <hr />
+      </div>
+    </div>
+  );
 };
 
 export default PanelAdmin;
