@@ -40,15 +40,15 @@ const SideModalEM = ({
           onClick={onCancel} // kliknięcie w tło zamyka modal
         ></div>
         <div
-          className="fixed top-0 right-0 p-5 flex flex-col gap-10 h-full w-1/3 bg-gray-200 z-999"
+          className="fixed top-0 right-0 p-5 flex flex-col gap-10 h-full w-1/3 bg-gray-200 z-999 max-w-[700px]"
           role="dialog"
           aria-modal="true"
         >
-          <p className="text-2xl text-center border-t border-b border-gray-400 italic">
-            <strong> {title}</strong>
+          <p className="text-3xl font-semibold text-center">
+            Edycja wydarzenia
           </p>
           <div className="w-full overflow-auto">{children}</div>
-          <div className="flex w-full justify-between border-t border-gray-400 pt-5 mt-auto">
+          <div className="flex w-full justify-between  pt-5 mt-auto">
             <ButtonEM
               type="button"
               kind="primary"
