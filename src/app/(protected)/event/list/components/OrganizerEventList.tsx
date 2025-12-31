@@ -102,7 +102,7 @@ const OrganizerEventList = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-[1920px] mx-auto">
       <OrganizerEventListHeader />
       <ListWrapper
         data={{

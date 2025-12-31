@@ -33,3 +33,23 @@ export const ROLES = {
 };
 
 export type Roles = (typeof ROLES)[keyof typeof ROLES];
+
+export interface AdminStats {
+  totalUsers: number;
+  approvedEvents: number;
+  pendingEvents: number;
+  rejectedEvents: number;
+  totalOrganizers: number;
+  totalParticipants: number;
+  totalEvents: number;
+}
+
+export interface PendingEvents {
+  title: string;
+  organizer: string;
+}
+
+export interface AdminAlerts {
+  pendingEvents: PendingEvents[];
+  pendingEventsCount: number;
+}

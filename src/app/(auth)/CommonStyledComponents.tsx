@@ -4,6 +4,9 @@ import { b } from "framer-motion/client";
 import styled from "styled-components";
 
 export const AuthCard = styled.div`
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
   width: 80%;
   display: flex;
   justify-content: center;

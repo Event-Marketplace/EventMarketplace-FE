@@ -129,10 +129,7 @@ const LoginView = () => {
               />
               <p>
                 Nie posiadasz konta? Zarejestruj się{" "}
-                <a
-                  href="/auth/register"
-                  style={{ textDecorationColor: "blue" }}
-                >
+                <a href="/register" style={{ textDecorationColor: "blue" }}>
                   tutaj!
                 </a>
               </p>
