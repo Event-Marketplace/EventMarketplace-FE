@@ -110,6 +110,10 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
     router.push("/organizer-panel");
   };
 
+  const handleAdminPanel = () => {
+    router.push("/admin-panel");
+  };
+
   if (isAuthenticated === null) {
     return <div className="w-full h-24 bg-[#772626] animate-pulse shadow-md" />;
   }
@@ -150,6 +154,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
                     </HeaderLink>
                   )}
 
+                  {currentContext === "Admin" && (
+                    <HeaderLink onClick={handleAdminPanel}>
+                      Panel Administratora
+                    </HeaderLink>
+                  )}
+
                   <HeaderLink onClick={handleLogout}>Wyloguj</HeaderLink>
                 </>
               </MobileMenu>
@@ -164,6 +174,12 @@ const AuthGlobalLayout = ({ children }: GlobalLayoutProps) => {
                 {currentContext === "Organizer" && (
                   <HeaderLink onClick={handleOrganizerPanel}>
                     Panel Organizatora
+                  </HeaderLink>
+                )}
+
+                {currentContext === "Admin" && (
+                  <HeaderLink onClick={handleAdminPanel}>
+                    Panel Administratora
                   </HeaderLink>
                 )}
 
