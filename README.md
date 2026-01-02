@@ -15,6 +15,7 @@ Projekt w trakcie rozwoju - funkcjonalności są dodawane iteracyjnie. Trwają p
 - Rejestracja i logowanie użytkowników
 - Obsługa ról: Admin, Organizer, Member
 - Panel organizatora
+- Dashboard administratora
 - Panel admina (w trakcie)
 - Obsługa JWT (access + refresh)
 - SSR / CSR rendering
