@@ -6,6 +6,7 @@ import infoIcon from "@/images/info.svg";
 import editIcon from "@/images/pencil.svg";
 import removeIcon from "@/images/trash.svg";
 import membersIcon from "@/images/users.svg";
+import planeIcon from "@/images/plane.svg";
 import { useState } from "react";
 import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
@@ -15,12 +16,14 @@ type OrganizerEventCardProps = {
   event: Event;
   onDelete: () => void;
   onOpenSideModal: () => void;
+  onSubmitEvent: () => void;
 };
 
 const OrganizerEventCard = ({
   event,
   onDelete,
   onOpenSideModal,
+  onSubmitEvent,
 }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
@@ -95,6 +98,17 @@ const OrganizerEventCard = ({
 
           <div className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md">
             <Image src={membersIcon} height={24} width={24} alt="members" />
+          </div>
+
+          <div
+            className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
+              event.status !== "Draft"
+                ? "opacity-40 pointer-events-none"
+                : "hover:bg-white hover:scale-110"
+            }`}
+            onClick={onSubmitEvent}
+          >
+            <Image src={planeIcon} height={24} width={24} alt="submitt" />
           </div>
 
           <div

@@ -97,6 +97,15 @@ const OrganizerEventList = () => {
     setOpenModal(true);
   };
 
+  const handleSubmitEvent = async (eventId: string) => {
+    try {
+      await apiAxios.put(`Event/submit-event/${eventId}`);
+      fetchEvents();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const closeModal = () => {
     setOpenModal(false);
   };
@@ -136,6 +145,9 @@ const OrganizerEventList = () => {
                 event={event}
                 onDelete={() => handleDelete(event.id)}
                 onOpenSideModal={() => handleOpenSideModal(event)}
+                onSubmitEvent={() => {
+                  handleSubmitEvent(event.id);
+                }}
               />
             ))}
           </div>
