@@ -5,6 +5,7 @@ import ListWrapper from "@/components/ui/list/ListWrapper";
 import { apiAxios } from "@/lib/apiAxios";
 import { useEffect, useState } from "react";
 import calendarIcon from "@/images/calendar.svg";
+import { Tabs } from "./EventTabs";
 
 interface EventStatus {
   statusIndex: number;
@@ -30,8 +31,14 @@ interface AdminEventListType {
   totalCount: number;
 }
 
-const AdminEventList = () => {
+type AdminEventListProps = {
+  tab: Tabs;
+  handleCount?: (count: number) => void;
+};
+
+const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   const [events, setEvents] = useState<AdminEventListType>();
+
   const handlePage = () => {};
   const data = {
     currentPage: 1,
@@ -44,11 +51,13 @@ const AdminEventList = () => {
     const fetchEvents = async () => {
       const res = await apiAxios.get("Event/admin", {
         params: {
-          Tab: "Pending",
+          Tab: tab,
         },
       });
       setEvents(res.data);
-      console.log("response", res.data);
+      if (handleCount) {
+        handleCount(res.data.eventList.length);
+      }
     };
 
     fetchEvents();
