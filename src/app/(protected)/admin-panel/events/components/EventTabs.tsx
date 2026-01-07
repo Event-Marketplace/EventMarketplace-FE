@@ -15,7 +15,7 @@ const EventTabs = () => {
   const [pendingCount, setPendingCount] = useState<number>();
 
   return (
-    <div>
+    <div className="max-w-[1920px] mx-auto">
       <div className="flex border-b">
         <button
           className={`px-4 py-2 ${
