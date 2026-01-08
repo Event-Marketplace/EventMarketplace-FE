@@ -7,9 +7,6 @@
     # kopiujemy tylko package.json + package-lock.json
     COPY package*.json ./
     
-    # kopiujemy plik .env do builda, żeby Next.js wstrzyknął zmienne
-    COPY .env.docker .env
-    
     # instalacja wszystkich zależności
     RUN npm ci
     
