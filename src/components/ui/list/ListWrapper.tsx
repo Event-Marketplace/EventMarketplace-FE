@@ -17,6 +17,7 @@ type ListWrapperProps<T> = {
   filters?: React.ReactNode;
   titleSection?: React.ReactNode;
   visibleTotalCount?: boolean;
+  titleIcon?: string;
 };
 
 const ListWrapper = <T,>({
@@ -26,12 +27,13 @@ const ListWrapper = <T,>({
   filters,
   titleSection,
   visibleTotalCount,
+  titleIcon,
 }: ListWrapperProps<T>) => {
   return (
     <div className="sm:p-8 p-0 flex flex-col gap-2 bg-gray-100 rounded-lg border-4 ">
       {titleSection && (
-        <div className="flex xl:flex-col flex-row w-full gap-5 py-5">
-          {titleSection}
+        <div className="flex xl:flex flex-row items-center w-full gap-3 py-5 text-3xl font-semibold">
+          {titleSection} <img src={titleIcon} alt="icon" width={48} />
         </div>
       )}
       {filters && (

@@ -7,10 +7,12 @@ import { stat } from "fs";
 import { useEffect, useState } from "react";
 import AdminStatsCard from "./AdminStatsCard";
 import AdminAlertsCard from "./AdminAlertsCard";
+import { useRouter } from "next/navigation";
 
 const PanelAdmin = () => {
   const [stats, setStats] = useState<AdminStats>();
   const [alerts, setAlerts] = useState<AdminAlerts>();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -39,7 +41,7 @@ const PanelAdmin = () => {
   }, []);
 
   const handleEvents = () => {
-    console.log("wydarzenia");
+    router.push("/admin-panel/events");
   };
 
   const handleOrganizers = () => {
