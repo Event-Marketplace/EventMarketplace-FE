@@ -1,43 +1,29 @@
 # ----------------------
-# 1️⃣ Stage build (builder)
+# Stage 1: builder (instaluje wszystko)
 # ----------------------
     FROM node:20-bullseye AS builder
     WORKDIR /app
     
-    # kopiujemy tylko package.json + package-lock.json
+    # kopiujemy package.json i package-lock.json
     COPY package*.json ./
     
-    # instalacja wszystkich zależności
+    # instalacja wszystkich zależności dev + prod
     RUN npm ci
     
     # kopiujemy resztę kodu
     COPY . .
     
-    # build aplikacji (Next.js / React)
-    RUN npm run build
-    
     # ----------------------
-    # 2️⃣ Stage run (runner - produkcja)
+    # Stage 2: dev runner
     # ----------------------
-    FROM node:20-bullseye-slim AS runner
+    FROM node:20-bullseye AS dev
     WORKDIR /app
     
-    # kopiujemy tylko build i potrzebne pliki
-    COPY --from=builder /app/.next ./.next
-    COPY --from=builder /app/public ./public
-    COPY --from=builder /app/package*.json ./
-    
-    # instalacja tylko produkcyjnych zależności
-    RUN npm ci --omit=dev
+    # kopiujemy wszystko z buildera
+    COPY --from=builder /app ./
     
     EXPOSE 3000
     
-    # uruchomienie aplikacji w trybie produkcyjnym
-    CMD ["npm", "run", "start"]
-    
-    # ----------------------
-    # 3️⃣ Opcjonalnie Stage dev (npm)
-    # ----------------------
-    # Jeśli chcesz uruchamiać dev server w Dockerze:
-     CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]
+    # uruchomienie dev servera z hot-reload
+    CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]
     
