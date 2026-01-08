@@ -5,26 +5,17 @@ import ListWrapper from "@/components/ui/list/ListWrapper";
 import { apiAxios } from "@/lib/apiAxios";
 import { useEffect, useState } from "react";
 import calendarIcon from "@/images/calendar.svg";
-import circleInfoIcon from "@/images/circle-info.svg";
-import circleCheck from "@/images/circle-check.svg";
-import circleX from "@/images/circle-x.svg";
-import commentIcon from "@/images/comment.svg";
-import increaseSizeIcon from "@/images/Increase-size.svg";
 import { Tabs } from "./EventTabs";
-import Image from "next/image";
-import BasicTooltip from "@/components/ui/tooltips/BasicTooltip";
-import { statusVariantMap } from "@/lib/const";
-import { Badge } from "@/components/ui/badge";
-import { EventStatus } from "@/types/types";
 import InfoModalEM from "@/components/ui/modals/InfoModalEM";
+import AdminEventCard from "./AdminEventCard";
 
-interface EventStatusType {
+export interface EventStatusType {
   statusIndex: number;
   statusName: string;
   statusDisplayName: string;
 }
 
-interface AdminEvent {
+export interface AdminEvent {
   id: string;
   title: string;
   description: string;
@@ -39,12 +30,12 @@ interface AdminEvent {
   phone: string;
 }
 
-interface AdminEventListType {
+export interface AdminEventListType {
   eventList: AdminEvent[];
   totalCount: number;
 }
 
-type AdminEventListProps = {
+export type AdminEventListProps = {
   tab: Tabs;
   handleCount?: (count: number) => void;
 };
@@ -106,98 +97,12 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
     >
       {events?.eventList.map((item, index) => (
         <CardWrapper key={index}>
-          <div className="w-1/12 flex flex-col">
-            <img
-              key={index}
-              className="w-[90] h-[60] hover:cursor-pointer"
-              src={item.imageUrl}
-              alt="picture"
-              onClick={() => {
-                handleImageModal(item.imageUrl);
-              }}
-            />
-          </div>
-          <div className="w-1/6 flex flex-col">
-            <BasicTooltip text={item.title}>
-              <label className="text-gray-500 flex gap-2 font-semibold">
-                Tytuł
-              </label>
-            </BasicTooltip>
-            <span className="truncate"> {item.title}</span>
-          </div>
-          <div className="w-1/4 flex flex-col">
-            <label className="text-gray-500 flex gap-2">
-              Opis
-              <Image
-                className="hover:cursor-pointer"
-                src={increaseSizeIcon}
-                width={23}
-                alt="open-description"
-                onClick={() => {
-                  handleOpenDescModal(item.description);
-                }}
-              />
-            </label>
-
-            <span className="truncate">{item.description}</span>
-          </div>
-          <div className="w-1/9 flex flex-col">
-            <label className="text-gray-500 flex gap-2">
-              Czas trwania
-              <BasicTooltip
-                width="200"
-                text={`Start: ${item.start}, Koniec: ${item.end}`}
-              >
-                <Image src={circleInfoIcon} width={22} alt="info" />
-              </BasicTooltip>
-            </label>
-            <span> {item.duration}</span>
-          </div>
-          <div className="w-1/7 flex flex-col">
-            <label className="text-gray-500">Status</label>
-            <Badge
-              className="mr-auto"
-              variant={
-                statusVariantMap[item.eventStatus.statusName as EventStatus]
-              }
-            >
-              {item.eventStatus.statusDisplayName}
-            </Badge>
-          </div>
-          <div className="w-1/8 flex flex-col">
-            <label className="text-gray-500 flex gap-2">
-              Organizator
-              <BasicTooltip
-                width="200"
-                text={`E-mail: ${item.email}, Telefon: ${item.phone}`}
-              >
-                <Image src={circleInfoIcon} width={22} alt="info" />
-              </BasicTooltip>
-            </label>
-            <span> {item.fullName}</span>
-          </div>
-          {tab === Tabs.Pending && (
-            <div className="w-1/21 flex my-auto">
-              <Image
-                className="hover:cursor-pointer"
-                src={circleCheck}
-                width={28}
-                alt="approve-icon"
-              />
-              <Image
-                className="hover:cursor-pointer"
-                src={circleX}
-                width={28}
-                alt="reject-icon"
-              />
-              <Image
-                className="hover:cursor-pointer"
-                src={commentIcon}
-                width={28}
-                alt="add-comment-icon"
-              />
-            </div>
-          )}
+          <AdminEventCard
+            event={item}
+            tab={tab}
+            handleImageModal={handleImageModal}
+            handleOpenDescModal={handleOpenDescModal}
+          />
         </CardWrapper>
       ))}
       <InfoModalEM onCancel={handleCloseModal} setOpen={openImageModal}>
