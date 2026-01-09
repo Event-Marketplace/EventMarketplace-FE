@@ -17,6 +17,15 @@ export interface EventStatusType {
   statusDisplayName: string;
 }
 
+export interface EventComment {
+  id: string;
+  content: string;
+  user: string;
+  createdAt: string;
+  eventId: string;
+  userId: string;
+}
+
 export interface AdminEvent {
   id: string;
   title: string;
@@ -30,6 +39,7 @@ export interface AdminEvent {
   fullName: string;
   email: string;
   phone: string;
+  comments: EventComment[];
 }
 
 export interface AdminEventListType {
@@ -84,13 +94,15 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   useEffect(() => {
     if (!conn) return;
 
-    const onReceiveComment = (eventId: string, comment: string) => {
+    const onReceiveComment = (eventId: string, comment: EventComment) => {
       setEvents((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
           eventList: prev.eventList.map((ev) =>
-            ev.id === eventId ? { ...ev, comments: [...[], comment] } : ev
+            ev.id === eventId
+              ? { ...ev, comments: [...ev.comments, comment] }
+              : ev
           ),
         };
       });

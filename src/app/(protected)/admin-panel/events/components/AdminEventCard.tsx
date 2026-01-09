@@ -14,6 +14,7 @@ import increaseSizeIcon from "@/images/Increase-size.svg";
 import { Badge } from "@/components/ui/badge";
 import InfoModalEM from "@/components/ui/modals/InfoModalEM";
 import { FormEvent, useState } from "react";
+import CommentSideModal from "./CommentSideModal";
 
 type AdminEventCardProps = {
   event: AdminEvent;
@@ -52,6 +53,10 @@ const AdminEventCard = ({
 
   const handleOpenCommentModal = () => {
     setOpenCommentModal(true);
+  };
+
+  const handleCloseCommentModal = () => {
+    setOpenCommentModal(false);
   };
 
   return (
@@ -147,7 +152,12 @@ const AdminEventCard = ({
             onClick={handleOpenCommentModal}
           />
 
-          <InfoModalEM
+          <CommentSideModal
+            comments={event.comments}
+            open={openCommentModal}
+            onClose={handleCloseCommentModal}
+          />
+          {/* <InfoModalEM
             onCancel={handleCloseDescModal}
             setOpen={openCommentModal}
           >
@@ -164,7 +174,7 @@ const AdminEventCard = ({
                 </button>
               </form>
             </div>
-          </InfoModalEM>
+          </InfoModalEM> */}
         </div>
       )}
     </>
