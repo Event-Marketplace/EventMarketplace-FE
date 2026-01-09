@@ -3,11 +3,13 @@
 import CardWrapper from "@/components/ui/list/CardWrapper";
 import ListWrapper from "@/components/ui/list/ListWrapper";
 import { apiAxios } from "@/lib/apiAxios";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import calendarIcon from "@/images/calendar.svg";
 import { Tabs } from "./EventTabs";
 import InfoModalEM from "@/components/ui/modals/InfoModalEM";
 import AdminEventCard from "./AdminEventCard";
+import { useSignalR } from "@/lib/signalR/SignalRProvider";
+import { HubConnectionState } from "@microsoft/signalr";
 
 export interface EventStatusType {
   statusIndex: number;
@@ -71,6 +73,34 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
     fetchEvents();
   }, []);
 
+  const conn = useSignalR();
+
+  const handleAddComment = async (eventId: string, comment: string) => {
+    if (!conn || conn.state !== HubConnectionState.Connected) return;
+    await conn.invoke("AddComment", eventId, comment);
+  };
+
+  // odbiór komentarzy
+  useEffect(() => {
+    if (!conn) return;
+
+    const onReceiveComment = (eventId: string, comment: string) => {
+      setEvents((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          eventList: prev.eventList.map((ev) =>
+            ev.id === eventId ? { ...ev, comments: [...[], comment] } : ev
+          ),
+        };
+      });
+    };
+
+    conn.on("ReceiveComment", onReceiveComment);
+
+    return () => conn.off("ReceiveComment", onReceiveComment);
+  }, [conn]);
+
   const handleImageModal = (imageUrl: string) => {
     setOpenImageModal(true);
     setActiveImageUrl(imageUrl);
@@ -88,6 +118,7 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   const handleCloseDescModal = () => {
     setOpenDescModal(false);
   };
+
   return (
     <ListWrapper
       data={data}
@@ -102,6 +133,7 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
             tab={tab}
             handleImageModal={handleImageModal}
             handleOpenDescModal={handleOpenDescModal}
+            onAddComment={(comment) => handleAddComment(item.id, comment)}
           />
         </CardWrapper>
       ))}
