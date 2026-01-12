@@ -7,6 +7,7 @@ type InputProps = {
   type: string;
   name: string;
   textarea?: boolean;
+  height?: number;
 };
 
 const StyledInput = styled.input<InputProps>`
@@ -27,7 +28,7 @@ const StyledTextarea = styled.textarea<InputProps>`
   color: black;
   border: 1px solid #ccc;
   resize: vertical; /* pozwala użytkownikowi zmieniać wysokość */
-  min-height: 200px;
+  min-height: ${(props) => (props.height ? `${props.height}px` : "200px")};
 `;
 
 const InputEM = ({ width, textarea = false, ...props }: InputProps) => {

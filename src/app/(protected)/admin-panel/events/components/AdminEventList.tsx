@@ -58,6 +58,10 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   const [activeImageUrl, setActiveImageUrl] = useState<string>();
   const [openDescModal, setOpenDescModal] = useState<boolean>(false);
   const [activeDesc, setActiveDesc] = useState<string>();
+  const currentContext = localStorage.getItem("currentContext");
+  const [activeCommentEventId, setActiveCommentEventId] = useState<
+    string | null
+  >(null);
 
   const handlePage = () => {};
   const data = {
@@ -67,19 +71,19 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
     totalPages: 1,
   };
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const res = await apiAxios.get("Event/admin", {
-        params: {
-          Tab: tab,
-        },
-      });
-      setEvents(res.data);
-      if (handleCount) {
-        handleCount(res.data.eventList.length);
-      }
-    };
+  const fetchEvents = async () => {
+    const res = await apiAxios.get("Event/admin", {
+      params: {
+        Tab: tab,
+      },
+    });
+    setEvents(res.data);
+    if (handleCount) {
+      handleCount(res.data.eventList.length);
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -87,7 +91,15 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
 
   const handleAddComment = async (eventId: string, comment: string) => {
     if (!conn || conn.state !== HubConnectionState.Connected) return;
-    await conn.invoke("AddComment", eventId, comment);
+    await conn.invoke("AddComment", eventId, comment, currentContext);
+  };
+
+  const handleOpenCommentModal = (eventId: string) => {
+    setActiveCommentEventId(eventId);
+  };
+
+  const handleCloseCommentModal = () => {
+    setActiveCommentEventId(null);
   };
 
   // odbiór komentarzy
@@ -109,7 +121,6 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
     };
 
     conn.on("ReceiveComment", onReceiveComment);
-
     return () => conn.off("ReceiveComment", onReceiveComment);
   }, [conn]);
 
@@ -146,6 +157,7 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
             handleImageModal={handleImageModal}
             handleOpenDescModal={handleOpenDescModal}
             onAddComment={(comment) => handleAddComment(item.id, comment)}
+            onSuccess={fetchEvents}
           />
         </CardWrapper>
       ))}

@@ -5,7 +5,7 @@ import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
 import { Tabs } from "./EventTabs";
 import Image from "next/image";
-import { AdminEvent } from "./AdminEventList";
+import { AdminEvent, EventComment } from "./AdminEventList";
 import circleInfoIcon from "@/images/circle-info.svg";
 import circleCheck from "@/images/circle-check.svg";
 import circleX from "@/images/circle-x.svg";
@@ -13,7 +13,7 @@ import commentIcon from "@/images/comment.svg";
 import increaseSizeIcon from "@/images/Increase-size.svg";
 import { Badge } from "@/components/ui/badge";
 import InfoModalEM from "@/components/ui/modals/InfoModalEM";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import CommentSideModal from "./CommentSideModal";
 
 type AdminEventCardProps = {
@@ -22,6 +22,7 @@ type AdminEventCardProps = {
   handleImageModal: (url: string) => void;
   handleOpenDescModal: (content: string) => void;
   onAddComment: (comment: string) => Promise<void>;
+  onSuccess: () => void;
 };
 
 const AdminEventCard = ({
@@ -30,22 +31,9 @@ const AdminEventCard = ({
   handleImageModal,
   handleOpenDescModal,
   onAddComment,
+  onSuccess,
 }: AdminEventCardProps) => {
-  const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(false);
   const [openCommentModal, setOpenCommentModal] = useState<boolean>(false);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!comment.trim()) return;
-    try {
-      setLoading(true);
-      await onAddComment(comment);
-      setComment("");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCloseDescModal = () => {
     setOpenCommentModal(false);
@@ -156,6 +144,8 @@ const AdminEventCard = ({
             comments={event.comments}
             open={openCommentModal}
             onClose={handleCloseCommentModal}
+            onCreateComment={onAddComment}
+            onSuccess={onSuccess}
           />
           {/* <InfoModalEM
             onCancel={handleCloseDescModal}
