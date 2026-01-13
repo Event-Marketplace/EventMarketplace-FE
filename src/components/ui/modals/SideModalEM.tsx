@@ -13,7 +13,7 @@ type SideModalProps = {
   cancelText: string;
   isOpen: boolean;
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   formId?: string;
 };
 

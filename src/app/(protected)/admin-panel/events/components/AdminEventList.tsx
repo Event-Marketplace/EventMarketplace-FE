@@ -58,10 +58,6 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   const [activeImageUrl, setActiveImageUrl] = useState<string>();
   const [openDescModal, setOpenDescModal] = useState<boolean>(false);
   const [activeDesc, setActiveDesc] = useState<string>();
-  const currentContext = localStorage.getItem("currentContext");
-  const [activeCommentEventId, setActiveCommentEventId] = useState<
-    string | null
-  >(null);
 
   const handlePage = () => {};
   const data = {
@@ -86,43 +82,6 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   useEffect(() => {
     fetchEvents();
   }, []);
-
-  const conn = useSignalR();
-
-  const handleAddComment = async (eventId: string, comment: string) => {
-    if (!conn || conn.state !== HubConnectionState.Connected) return;
-    await conn.invoke("AddComment", eventId, comment, currentContext);
-  };
-
-  const handleOpenCommentModal = (eventId: string) => {
-    setActiveCommentEventId(eventId);
-  };
-
-  const handleCloseCommentModal = () => {
-    setActiveCommentEventId(null);
-  };
-
-  // odbiór komentarzy
-  useEffect(() => {
-    if (!conn) return;
-
-    const onReceiveComment = (eventId: string, comment: EventComment) => {
-      setEvents((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          eventList: prev.eventList.map((ev) =>
-            ev.id === eventId
-              ? { ...ev, comments: [...ev.comments, comment] }
-              : ev
-          ),
-        };
-      });
-    };
-
-    conn.on("ReceiveComment", onReceiveComment);
-    return () => conn.off("ReceiveComment", onReceiveComment);
-  }, [conn]);
 
   const handleImageModal = (imageUrl: string) => {
     setOpenImageModal(true);
@@ -156,7 +115,6 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
             tab={tab}
             handleImageModal={handleImageModal}
             handleOpenDescModal={handleOpenDescModal}
-            onAddComment={(comment) => handleAddComment(item.id, comment)}
             onSuccess={fetchEvents}
           />
         </CardWrapper>

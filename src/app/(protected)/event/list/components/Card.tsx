@@ -7,16 +7,21 @@ import editIcon from "@/images/pencil.svg";
 import removeIcon from "@/images/trash.svg";
 import membersIcon from "@/images/users.svg";
 import planeIcon from "@/images/plane.svg";
-import { useState } from "react";
+import commentIcon from "@/images/comment.svg";
+import { useEffect, useState } from "react";
 import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
 import SideModalEM from "@/components/ui/modals/SideModalEM";
+import CommentSideModal from "@/app/(protected)/admin-panel/events/components/CommentSideModal";
+import { useSignalR } from "@/lib/signalR/SignalRProvider";
+import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
 
 type OrganizerEventCardProps = {
   event: Event;
   onDelete: () => void;
   onOpenSideModal: () => void;
   onSubmitEvent: () => void;
+  onSuccess?: () => void;
 };
 
 const OrganizerEventCard = ({
@@ -24,9 +29,34 @@ const OrganizerEventCard = ({
   onDelete,
   onOpenSideModal,
   onSubmitEvent,
+  onSuccess,
 }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const conn = useSignalR();
+  const [comments, setComments] = useState<EventComment[]>(
+    event.comments || []
+  );
+  const currentContext = localStorage.getItem("currentContext");
+
+  useEffect(() => {
+    if (!conn) return;
+
+    const onReceiveComment = (eventId: string, comment: EventComment) => {
+      if (eventId !== event.id) return;
+      setComments((prev) => [...prev, comment]);
+    };
+
+    conn.on("ReceiveComment", onReceiveComment);
+
+    return () => conn.off("ReceiveComment", onReceiveComment);
+  }, [conn, event.id]);
+
+  const handleAddComment = async (content: string) => {
+    if (!conn) return;
+    await conn.invoke("AddComment", event.id, content, currentContext);
+  };
 
   const startEvent = new Intl.DateTimeFormat("pl-PL", {
     dateStyle: "medium",
@@ -40,6 +70,18 @@ const OrganizerEventCard = ({
 
   const handleDeleteEvent = () => {
     onDelete();
+  };
+
+  const handleCloseModal = async () => {
+    if (!conn || conn.state !== "Connected") return;
+    await conn?.invoke("LeaveEventGroup", event.id);
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = async () => {
+    if (!conn || conn.state !== "Connected") return;
+    await conn?.invoke("JoinEventGroup", event.id);
+    setOpenModal(true);
   };
 
   return (
@@ -121,6 +163,13 @@ const OrganizerEventCard = ({
           >
             <Image src={removeIcon} height={24} width={24} alt="remove" />
           </div>
+
+          <div
+            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
+            onClick={handleOpenModal}
+          >
+            <Image src={commentIcon} height={24} width={24} alt="members" />
+          </div>
         </div>
 
         {openDetail && (
@@ -155,6 +204,14 @@ const OrganizerEventCard = ({
           </div>
         )}
       </div>
+      <CommentSideModal
+        comments={comments}
+        onClose={handleCloseModal}
+        onCreateComment={handleAddComment}
+        open={openModal}
+        onSuccess={onSuccess}
+        formId="organizer-comment-form"
+      />
     </div>
   );
 };

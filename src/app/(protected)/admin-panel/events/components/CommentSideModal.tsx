@@ -13,8 +13,9 @@ type CommentSideModalProps = {
   comments: EventComment[];
   open: boolean;
   onClose: () => void;
-  onCreateComment: (comment: string) => void;
-  onSuccess: () => void;
+  onCreateComment: (comment: string) => Promise<void>;
+  onSuccess?: () => void;
+  formId: string;
 };
 
 const CommentSideModal = ({
@@ -23,15 +24,9 @@ const CommentSideModal = ({
   onClose,
   onCreateComment,
   onSuccess,
+  formId,
 }: CommentSideModalProps) => {
   const currentUserId = useSelector((state: AppState) => state.auth.userId);
-
-  const handleSubmit = (value: string) => {
-    onCreateComment(value);
-    setTimeout(() => {
-      onSuccess();
-    }, 1500);
-  };
 
   useEffect(() => {
     if (open) {
@@ -50,8 +45,7 @@ const CommentSideModal = ({
       cancelText="Cofnij"
       confirmText="Utwórz komentarz"
       onCancel={onClose}
-      onSubmit={() => handleSubmit}
-      formId="comment-form"
+      formId={formId}
     >
       <div className="flex flex-col h-full">
         <div className="flex-1 flex flex-col gap-3 w-full overflow-y-auto">
@@ -87,11 +81,14 @@ const CommentSideModal = ({
           <Formik
             initialValues={{ comment: "" }}
             onSubmit={(values, { setFieldValue }) => {
-              handleSubmit(values.comment);
+              onCreateComment(values.comment);
               setFieldValue("comment", "");
+              if (onSuccess) {
+                onSuccess();
+              }
             }}
           >
-            <Form id="comment-form" className="border">
+            <Form id={formId} className="border">
               <Field
                 as={InputEM}
                 type="text"

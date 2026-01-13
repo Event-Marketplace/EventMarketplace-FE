@@ -12,17 +12,16 @@ import circleX from "@/images/circle-x.svg";
 import commentIcon from "@/images/comment.svg";
 import increaseSizeIcon from "@/images/Increase-size.svg";
 import { Badge } from "@/components/ui/badge";
-import InfoModalEM from "@/components/ui/modals/InfoModalEM";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CommentSideModal from "./CommentSideModal";
+import { useSignalR } from "@/lib/signalR/SignalRProvider";
 
 type AdminEventCardProps = {
   event: AdminEvent;
   tab: Tabs;
   handleImageModal: (url: string) => void;
   handleOpenDescModal: (content: string) => void;
-  onAddComment: (comment: string) => Promise<void>;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 };
 
 const AdminEventCard = ({
@@ -30,20 +29,46 @@ const AdminEventCard = ({
   tab,
   handleImageModal,
   handleOpenDescModal,
-  onAddComment,
   onSuccess,
 }: AdminEventCardProps) => {
   const [openCommentModal, setOpenCommentModal] = useState<boolean>(false);
+  const conn = useSignalR();
+  const [comments, setComments] = useState<EventComment[]>(
+    event.comments || []
+  );
+  const currentContext = localStorage.getItem("currentContext");
+
+  useEffect(() => {
+    if (!conn) return;
+
+    const onReceiveComment = (eventId: string, comment: EventComment) => {
+      if (eventId !== event.id) return;
+      setComments((prev) => [...prev, comment]);
+    };
+
+    conn.on("ReceiveComment", onReceiveComment);
+
+    return () => conn.off("ReceiveComment", onReceiveComment);
+  }, [conn, event.id]);
+
+  const handleAddComment = async (content: string) => {
+    if (!conn) return;
+    await conn.invoke("AddComment", event.id, content, currentContext);
+  };
 
   const handleCloseDescModal = () => {
     setOpenCommentModal(false);
   };
 
-  const handleOpenCommentModal = () => {
+  const handleOpenCommentModal = async () => {
+    if (!conn || conn.state !== "Connected") return;
+    await conn?.invoke("JoinEventGroup", event.id);
     setOpenCommentModal(true);
   };
 
-  const handleCloseCommentModal = () => {
+  const handleCloseCommentModal = async () => {
+    if (!conn || conn.state !== "Connected") return;
+    await conn?.invoke("LeaveEventGroup", event.id);
     setOpenCommentModal(false);
   };
 
@@ -141,11 +166,12 @@ const AdminEventCard = ({
           />
 
           <CommentSideModal
-            comments={event.comments}
+            comments={comments}
             open={openCommentModal}
             onClose={handleCloseCommentModal}
-            onCreateComment={onAddComment}
+            onCreateComment={handleAddComment}
             onSuccess={onSuccess}
+            formId="admin-comment-form"
           />
           {/* <InfoModalEM
             onCancel={handleCloseDescModal}
