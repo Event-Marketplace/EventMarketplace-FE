@@ -5,18 +5,18 @@ import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
 import { Tabs } from "./EventTabs";
 import Image from "next/image";
-import { AdminEvent, EventComment } from "./AdminEventList";
+import { AdminEvent } from "./AdminEventList";
 import circleInfoIcon from "@/images/circle-info.svg";
 import circleCheck from "@/images/circle-check.svg";
 import circleX from "@/images/circle-x.svg";
 import commentIcon from "@/images/comment.svg";
 import increaseSizeIcon from "@/images/Increase-size.svg";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CommentSideModal from "./CommentSideModal";
-import { useSignalR } from "@/lib/signalR/SignalRProvider";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/store";
+import { useEventComments } from "../hooks/useEventComments";
 
 type AdminEventCardProps = {
   event: AdminEvent;
@@ -34,64 +34,23 @@ const AdminEventCard = ({
   onSuccess,
 }: AdminEventCardProps) => {
   const [openCommentModal, setOpenCommentModal] = useState<boolean>(false);
-  const conn = useSignalR();
-  const [comments, setComments] = useState<EventComment[]>(
-    event.comments || []
-  );
+
   const userId = useSelector((state: AppState) => state.auth.userId);
   const currentContext = localStorage.getItem("currentContext");
-  const unReadCount = comments.filter(
-    (c) => !c.wasRead && c.userId !== userId
-  ).length;
 
-  useEffect(() => {
-    if (!conn || conn.state !== "Connected") return;
-
-    conn.invoke("JoinEventGroup", event.id);
-
-    return () => {
-      conn.invoke("LeaveEventGroup", event.id);
-    };
-  }, [conn, event.id]);
-
-  //Oczekuj nowego komentarza!
-  useEffect(() => {
-    if (!conn) return;
-
-    const onReceiveComment = (eventId: string, comment: EventComment) => {
-      if (eventId !== event.id) return;
-
-      const updatedComment =
-        comment.userId === userId ? comment : { ...comment, wasRead: false };
-      setComments((prev) => [...prev, updatedComment]);
-    };
-
-    conn.on("ReceiveComment", onReceiveComment);
-
-    return () => conn.off("ReceiveComment", onReceiveComment);
-  }, [conn, event.id]);
-
-  //Oczekuj odczytania komentarzy!
-  useEffect(() => {
-    if (!conn) return;
-
-    const onCommentsRead = (eventId: string) => {
-      if (eventId !== event.id) return;
-      setComments((prev) => prev.map((c) => ({ ...c, wasRead: true })));
-    };
-
-    conn.on("CommentsRead", onCommentsRead);
-    return () => conn.off("CommentsRead", onCommentsRead);
-  }, [conn, event.id]);
-
-  const handleAddComment = async (content: string) => {
-    if (!conn) return;
-    await conn.invoke("AddComment", event.id, content, currentContext);
-  };
+  const { comments, unReadCount, addComment, markAsRead } = useEventComments({
+    eventId: event.id,
+    initialComments: event.comments,
+    userId: userId ?? "",
+  });
 
   const handleOpenCommentModal = async () => {
     setOpenCommentModal(true);
-    await conn?.invoke("ReadComments", event.id);
+    await markAsRead();
+  };
+
+  const handleAddComment = async (content: string) => {
+    await addComment(content, currentContext);
   };
 
   const handleCloseCommentModal = async () => {

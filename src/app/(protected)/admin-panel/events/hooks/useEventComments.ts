@@ -16,53 +16,59 @@ export const useEventComments = ({
   const conn = useSignalR();
   const [comments, setComments] = useState<EventComment[]>(initialComments);
 
-  // join / leave group
+  // join / leave grupy
   useEffect(() => {
     if (!conn || conn.state !== "Connected") return;
 
     conn.invoke("JoinEventGroup", eventId);
+
     return () => {
       conn.invoke("LeaveEventGroup", eventId);
     };
   }, [conn, eventId]);
 
-  // receive comment
+  // odbieranie nowych komentarzy
   useEffect(() => {
     if (!conn) return;
 
-    const onReceiveComment = (id: string, comment: EventComment) => {
-      if (id !== eventId) return;
+    const onReceiveComment = (receivedEventId: string, comment: EventComment) => {
+      if (receivedEventId !== eventId) return;
 
-      setComments(prev => [
-        ...prev,
-        {
-          ...comment,
-          wasRead: comment.userId === userId,
-        },
-      ]);
+      const updatedComment =
+        comment.userId === userId ? comment : { ...comment, wasRead: false };
+
+      setComments(prev => [...prev, updatedComment]);
     };
 
     conn.on("ReceiveComment", onReceiveComment);
     return () => conn.off("ReceiveComment", onReceiveComment);
   }, [conn, eventId, userId]);
 
-  const markAsRead = () => {
-    setComments(prev =>
-      prev.map(c =>
-        c.userId !== userId ? { ...c, wasRead: true } : c
-      )
-    );
+  // odbieranie odczytania komentarzy
+  useEffect(() => {
+    if (!conn) return;
 
-    conn?.invoke("ReadComments", eventId);
-  };
+    const onCommentsRead = (receivedEventId: string) => {
+      if (receivedEventId !== eventId) return;
+      setComments(prev => prev.map(c => ({ ...c, wasRead: true })));
+    };
+
+    conn.on("CommentsRead", onCommentsRead);
+    return () => conn.off("CommentsRead", onCommentsRead);
+  }, [conn, eventId]);
 
   const addComment = async (content: string, context?: string | null) => {
-    await conn?.invoke("AddComment", eventId, content, context);
+    if (!conn) return;
+    await conn.invoke("AddComment", eventId, content, context);
   };
 
-  const unReadCount = comments.filter(
-    c => !c.wasRead && c.userId !== userId
-  ).length;
+  const markAsRead = async () => {
+    if (!conn) return;
+    setComments(prev => prev.map(c => ({ ...c, wasRead: true })));
+    await conn.invoke("ReadComments", eventId);
+  };
+
+  const unReadCount = comments.filter(c => !c.wasRead && c.userId !== userId).length;
 
   return {
     comments,

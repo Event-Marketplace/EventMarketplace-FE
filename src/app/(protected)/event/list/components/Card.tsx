@@ -17,6 +17,7 @@ import { useSignalR } from "@/lib/signalR/SignalRProvider";
 import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/store";
+import { useEventComments } from "@/app/(protected)/admin-panel/events/hooks/useEventComments";
 
 type OrganizerEventCardProps = {
   event: Event;
@@ -36,58 +37,27 @@ const OrganizerEventCard = ({
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const conn = useSignalR();
-  const [comments, setComments] = useState<EventComment[]>(
-    event.comments || []
-  );
-  const currentContext = localStorage.getItem("currentContext");
+
   const userId = useSelector((state: AppState) => state.auth.userId);
-  const unReadCount = comments.filter(
-    (c) => !c.wasRead && c.userId !== userId
-  ).length;
+  const currentContext = localStorage.getItem("currentContext");
 
-  useEffect(() => {
-    if (!conn || conn.state !== "Connected") return;
+  const { comments, unReadCount, addComment, markAsRead } = useEventComments({
+    eventId: event.id,
+    initialComments: event.comments,
+    userId: userId ?? "",
+  });
 
-    conn.invoke("JoinEventGroup", event.id);
-
-    return () => {
-      conn.invoke("LeaveEventGroup", event.id);
-    };
-  }, [conn, event.id]);
-
-  useEffect(() => {
-    if (!conn) return;
-
-    const onReceiveComment = (eventId: string, comment: EventComment) => {
-      if (eventId !== event.id) return;
-
-      const updatedComment =
-        comment.userId === userId ? comment : { ...comment, wasRead: false };
-      setComments((prev) => [...prev, updatedComment]);
-    };
-
-    conn.on("ReceiveComment", onReceiveComment);
-
-    return () => conn.off("ReceiveComment", onReceiveComment);
-  }, [conn, event.id]);
-
-  //Oczekuj odczytania komentarzy!
-  useEffect(() => {
-    if (!conn) return;
-
-    const onCommentsRead = (eventId: string) => {
-      if (eventId !== event.id) return;
-      setComments((prev) => prev.map((c) => ({ ...c, wasRead: true })));
-    };
-
-    conn.on("CommentsRead", onCommentsRead);
-    return () => conn.off("CommentsRead", onCommentsRead);
-  }, [conn, event.id]);
+  const handleOpenCommentModal = async () => {
+    setOpenModal(true);
+    await markAsRead();
+  };
 
   const handleAddComment = async (content: string) => {
-    if (!conn) return;
-    await conn.invoke("AddComment", event.id, content, currentContext);
+    await addComment(content, currentContext);
+  };
+
+  const handleCloseCommentModal = async () => {
+    setOpenModal(false);
   };
 
   const startEvent = new Intl.DateTimeFormat("pl-PL", {
@@ -102,15 +72,6 @@ const OrganizerEventCard = ({
 
   const handleDeleteEvent = () => {
     onDelete();
-  };
-
-  const handleCloseModal = async () => {
-    setOpenModal(false);
-  };
-
-  const handleOpenModal = async () => {
-    setOpenModal(true);
-    await conn?.invoke("ReadComments", event.id);
   };
 
   return (
@@ -193,7 +154,10 @@ const OrganizerEventCard = ({
             <Image src={removeIcon} height={24} width={24} alt="remove" />
           </div>
 
-          <div className="relative inline-flex" onClick={handleOpenModal}>
+          <div
+            className="relative inline-flex"
+            onClick={handleOpenCommentModal}
+          >
             <Image
               className="block hover:cursor-pointer"
               src={commentIcon}
@@ -243,7 +207,7 @@ const OrganizerEventCard = ({
       </div>
       <CommentSideModal
         comments={comments}
-        onClose={handleCloseModal}
+        onClose={handleCloseCommentModal}
         onCreateComment={handleAddComment}
         open={openModal}
         onSuccess={onSuccess}
