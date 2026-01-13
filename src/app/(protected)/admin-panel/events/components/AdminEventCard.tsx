@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import CommentSideModal from "./CommentSideModal";
 import { useSignalR } from "@/lib/signalR/SignalRProvider";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/store";
 
 type AdminEventCardProps = {
   event: AdminEvent;
@@ -36,14 +38,32 @@ const AdminEventCard = ({
   const [comments, setComments] = useState<EventComment[]>(
     event.comments || []
   );
+  const userId = useSelector((state: AppState) => state.auth.userId);
   const currentContext = localStorage.getItem("currentContext");
+  const unReadCount = comments.filter(
+    (c) => !c.wasRead && c.userId !== userId
+  ).length;
 
+  useEffect(() => {
+    if (!conn || conn.state !== "Connected") return;
+
+    conn.invoke("JoinEventGroup", event.id);
+
+    return () => {
+      conn.invoke("LeaveEventGroup", event.id);
+    };
+  }, [conn, event.id]);
+
+  //Oczekuj nowego komentarza!
   useEffect(() => {
     if (!conn) return;
 
     const onReceiveComment = (eventId: string, comment: EventComment) => {
       if (eventId !== event.id) return;
-      setComments((prev) => [...prev, comment]);
+
+      const updatedComment =
+        comment.userId === userId ? comment : { ...comment, wasRead: false };
+      setComments((prev) => [...prev, updatedComment]);
     };
 
     conn.on("ReceiveComment", onReceiveComment);
@@ -51,24 +71,30 @@ const AdminEventCard = ({
     return () => conn.off("ReceiveComment", onReceiveComment);
   }, [conn, event.id]);
 
+  //Oczekuj odczytania komentarzy!
+  useEffect(() => {
+    if (!conn) return;
+
+    const onCommentsRead = (eventId: string) => {
+      if (eventId !== event.id) return;
+      setComments((prev) => prev.map((c) => ({ ...c, wasRead: true })));
+    };
+
+    conn.on("CommentsRead", onCommentsRead);
+    return () => conn.off("CommentsRead", onCommentsRead);
+  }, [conn, event.id]);
+
   const handleAddComment = async (content: string) => {
     if (!conn) return;
     await conn.invoke("AddComment", event.id, content, currentContext);
   };
 
-  const handleCloseDescModal = () => {
-    setOpenCommentModal(false);
-  };
-
   const handleOpenCommentModal = async () => {
-    if (!conn || conn.state !== "Connected") return;
-    await conn?.invoke("JoinEventGroup", event.id);
     setOpenCommentModal(true);
+    await conn?.invoke("ReadComments", event.id);
   };
 
   const handleCloseCommentModal = async () => {
-    if (!conn || conn.state !== "Connected") return;
-    await conn?.invoke("LeaveEventGroup", event.id);
     setOpenCommentModal(false);
   };
 
@@ -92,7 +118,7 @@ const AdminEventCard = ({
         </BasicTooltip>
         <span className="truncate"> {event.title}</span>
       </div>
-      <div className="w-1/4 flex flex-col">
+      <div className="w-1/5 flex flex-col">
         <label className="text-gray-500 flex gap-2">
           Opis
           <Image
@@ -144,7 +170,7 @@ const AdminEventCard = ({
         <span> {event.fullName}</span>
       </div>
       {tab === Tabs.Pending && (
-        <div className="w-1/21 flex my-auto">
+        <div className="w-1/15 flex my-auto flex-grow-1 justify-end">
           <Image
             className="hover:cursor-pointer"
             src={circleCheck}
@@ -157,13 +183,24 @@ const AdminEventCard = ({
             width={28}
             alt="reject-icon"
           />
-          <Image
-            className="hover:cursor-pointer"
-            src={commentIcon}
-            width={28}
-            alt="add-comment-icon"
+
+          <div
+            className="relative inline-flex"
             onClick={handleOpenCommentModal}
-          />
+          >
+            <Image
+              className="block hover:cursor-pointer"
+              src={commentIcon}
+              width={28}
+              height={28}
+              alt="add-comment-icon"
+            />
+            {unReadCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center font-bold rounded-full shadow-lg">
+                {unReadCount > 99 ? "99+" : unReadCount}
+              </span>
+            )}
+          </div>
 
           <CommentSideModal
             comments={comments}
@@ -173,24 +210,6 @@ const AdminEventCard = ({
             onSuccess={onSuccess}
             formId="admin-comment-form"
           />
-          {/* <InfoModalEM
-            onCancel={handleCloseDescModal}
-            setOpen={openCommentModal}
-          >
-            <div className="max-h-[500px]  overflow-hidden object-cover">
-              <form onSubmit={handleSubmit}>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Dodaj komentarz..."
-                />
-
-                <button disabled={loading}>
-                  {loading ? "Wysyłanie..." : "Dodaj komentarz"}
-                </button>
-              </form>
-            </div>
-          </InfoModalEM> */}
         </div>
       )}
     </>

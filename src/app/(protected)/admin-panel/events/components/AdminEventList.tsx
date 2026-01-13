@@ -24,6 +24,7 @@ export interface EventComment {
   createdAt: string;
   eventId: string;
   userId: string;
+  wasRead: boolean;
 }
 
 export interface AdminEvent {

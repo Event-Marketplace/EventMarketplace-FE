@@ -1,12 +1,17 @@
 import ButtonEM from "@/components/ui/ButtonEM";
 import { AdminAlerts } from "@/types/types";
+import { useRouter } from "next/navigation";
 
 type AlertsProp = {
   alerts: AdminAlerts | undefined;
 };
 
 const AdminAlertsCard: React.FC<AlertsProp> = ({ alerts }) => {
-  console.log("alerts", alerts);
+  const router = useRouter();
+  const handlePendingEvents = () => {
+    router.push("/admin-panel/events");
+  };
+
   return (
     <>
       {alerts && alerts?.pendingEvents.length < 1 ? (
@@ -49,6 +54,7 @@ const AdminAlertsCard: React.FC<AlertsProp> = ({ alerts }) => {
               text="Zobacz więcej"
               type="submit"
               style={{ marginTop: "20px", width: "200px" }}
+              onClick={handlePendingEvents}
             />
           </div>
         </div>

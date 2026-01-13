@@ -17,13 +17,15 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
   const [connection, setConnection] = useState<signalR.HubConnection | null>(
     null
   );
-
   const token = useSelector((state: AppState) => state.auth.accessToken);
 
   useEffect(() => {
+    if (!token) return;
+
     const conn = new signalR.HubConnectionBuilder()
       .withUrl("http://localhost:5141/eventHub", {
-        accessTokenFactory: () => token || "",
+        accessTokenFactory: () => token,
+        transport: signalR.HttpTransportType.WebSockets, // WebSockets zamiast LongPolling
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
@@ -31,8 +33,8 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
 
     conn
       .start()
-      .then(() => console.log("SignalR connected!", conn.connectionId))
-      .catch();
+      .then(() => console.log("✅ SignalR connected", conn.connectionId))
+      .catch((err) => console.error("❌ SignalR start error:", err));
 
     setConnection(conn);
 

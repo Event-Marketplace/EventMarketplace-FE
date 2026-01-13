@@ -15,6 +15,8 @@ import SideModalEM from "@/components/ui/modals/SideModalEM";
 import CommentSideModal from "@/app/(protected)/admin-panel/events/components/CommentSideModal";
 import { useSignalR } from "@/lib/signalR/SignalRProvider";
 import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/store";
 
 type OrganizerEventCardProps = {
   event: Event;
@@ -39,18 +41,48 @@ const OrganizerEventCard = ({
     event.comments || []
   );
   const currentContext = localStorage.getItem("currentContext");
+  const userId = useSelector((state: AppState) => state.auth.userId);
+  const unReadCount = comments.filter(
+    (c) => !c.wasRead && c.userId !== userId
+  ).length;
+
+  useEffect(() => {
+    if (!conn || conn.state !== "Connected") return;
+
+    conn.invoke("JoinEventGroup", event.id);
+
+    return () => {
+      conn.invoke("LeaveEventGroup", event.id);
+    };
+  }, [conn, event.id]);
 
   useEffect(() => {
     if (!conn) return;
 
     const onReceiveComment = (eventId: string, comment: EventComment) => {
       if (eventId !== event.id) return;
-      setComments((prev) => [...prev, comment]);
+
+      const updatedComment =
+        comment.userId === userId ? comment : { ...comment, wasRead: false };
+      setComments((prev) => [...prev, updatedComment]);
     };
 
     conn.on("ReceiveComment", onReceiveComment);
 
     return () => conn.off("ReceiveComment", onReceiveComment);
+  }, [conn, event.id]);
+
+  //Oczekuj odczytania komentarzy!
+  useEffect(() => {
+    if (!conn) return;
+
+    const onCommentsRead = (eventId: string) => {
+      if (eventId !== event.id) return;
+      setComments((prev) => prev.map((c) => ({ ...c, wasRead: true })));
+    };
+
+    conn.on("CommentsRead", onCommentsRead);
+    return () => conn.off("CommentsRead", onCommentsRead);
   }, [conn, event.id]);
 
   const handleAddComment = async (content: string) => {
@@ -73,15 +105,12 @@ const OrganizerEventCard = ({
   };
 
   const handleCloseModal = async () => {
-    if (!conn || conn.state !== "Connected") return;
-    await conn?.invoke("LeaveEventGroup", event.id);
     setOpenModal(false);
   };
 
   const handleOpenModal = async () => {
-    if (!conn || conn.state !== "Connected") return;
-    await conn?.invoke("JoinEventGroup", event.id);
     setOpenModal(true);
+    await conn?.invoke("ReadComments", event.id);
   };
 
   return (
@@ -164,11 +193,19 @@ const OrganizerEventCard = ({
             <Image src={removeIcon} height={24} width={24} alt="remove" />
           </div>
 
-          <div
-            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
-            onClick={handleOpenModal}
-          >
-            <Image src={commentIcon} height={24} width={24} alt="members" />
+          <div className="relative inline-flex" onClick={handleOpenModal}>
+            <Image
+              className="block hover:cursor-pointer"
+              src={commentIcon}
+              width={28}
+              height={28}
+              alt="add-comment-icon"
+            />
+            {unReadCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center font-bold rounded-full shadow-lg">
+                {unReadCount > 99 ? "99+" : unReadCount}
+              </span>
+            )}
           </div>
         </div>
 
