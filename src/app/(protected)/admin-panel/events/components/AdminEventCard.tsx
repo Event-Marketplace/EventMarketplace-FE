@@ -17,6 +17,8 @@ import CommentSideModal from "./CommentSideModal";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/store";
 import { useEventComments } from "../hooks/useEventComments";
+import { errors } from "jose";
+import { apiAxios } from "@/lib/apiAxios";
 
 type AdminEventCardProps = {
   event: AdminEvent;
@@ -55,6 +57,17 @@ const AdminEventCard = ({
 
   const handleCloseCommentModal = async () => {
     setOpenCommentModal(false);
+  };
+
+  const handleApproveEvent = async (eventId: string) => {
+    try {
+      await apiAxios.put(`Event/approve-event/${eventId}`);
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -141,6 +154,9 @@ const AdminEventCard = ({
             src={circleX}
             width={28}
             alt="reject-icon"
+            onClick={() => {
+              handleApproveEvent(event.id);
+            }}
           />
 
           <div
