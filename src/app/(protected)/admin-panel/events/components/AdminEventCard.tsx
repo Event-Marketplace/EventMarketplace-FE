@@ -19,6 +19,10 @@ import { AppState } from "@/redux/store";
 import { useEventComments } from "../hooks/useEventComments";
 import { errors } from "jose";
 import { apiAxios } from "@/lib/apiAxios";
+import InfoModalEM from "@/components/ui/modals/InfoModalEM";
+import { Field, Form, Formik } from "formik";
+import InputEM from "@/components/ui/InputEM";
+import toast from "react-hot-toast";
 
 type AdminEventCardProps = {
   event: AdminEvent;
@@ -26,6 +30,10 @@ type AdminEventCardProps = {
   handleImageModal: (url: string) => void;
   handleOpenDescModal: (content: string) => void;
   onSuccess?: () => void;
+};
+
+type RejectionReasonProps = {
+  rejectionReason: string;
 };
 
 const AdminEventCard = ({
@@ -36,7 +44,7 @@ const AdminEventCard = ({
   onSuccess,
 }: AdminEventCardProps) => {
   const [openCommentModal, setOpenCommentModal] = useState<boolean>(false);
-
+  const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const userId = useSelector((state: AppState) => state.auth.userId);
   const currentContext = localStorage.getItem("currentContext");
 
@@ -70,6 +78,41 @@ const AdminEventCard = ({
     }
   };
 
+  const initialValues: RejectionReasonProps = {
+    rejectionReason: "",
+  };
+
+  const handleRejectEvent = async (
+    eventId: string,
+    values: RejectionReasonProps
+  ) => {
+    if (!values.rejectionReason) {
+      toast.error(`Musisz wprowadzić powód odrzucenia!`);
+      return;
+    }
+    console.log("eventid", eventId);
+    console.log("reason", values.rejectionReason);
+    try {
+      await apiAxios.put(`Event/reject-event/${eventId}`, {
+        rejectionReason: values.rejectionReason,
+      });
+      setOpenInfoModal(false);
+      setTimeout(() => {
+        if (onSuccess) {
+          onSuccess();
+        }
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCloseInfoModal = () => {
+    setOpenInfoModal(false);
+  };
+
+  const formId = `RejectionEventModal-${event.id}`;
+  console.log("formid", formId);
   return (
     <>
       <div className="w-1/12 flex flex-col">
@@ -148,6 +191,9 @@ const AdminEventCard = ({
             src={circleCheck}
             width={28}
             alt="approve-icon"
+            onClick={() => {
+              handleApproveEvent(event.id);
+            }}
           />
           <Image
             className="hover:cursor-pointer"
@@ -155,7 +201,7 @@ const AdminEventCard = ({
             width={28}
             alt="reject-icon"
             onClick={() => {
-              handleApproveEvent(event.id);
+              setOpenInfoModal(true);
             }}
           />
 
@@ -185,6 +231,36 @@ const AdminEventCard = ({
             onSuccess={onSuccess}
             formId="admin-comment-form"
           />
+
+          <InfoModalEM
+            onCancel={handleCloseInfoModal}
+            setOpen={openInfoModal}
+            actionBtn
+            formId={formId}
+          >
+            <div className="flex flex-col gap-3">
+              <h1 className="text-2xl">
+                Czy na pewno chcesz odrzucić to wydarzenie?
+              </h1>
+              <Formik
+                onSubmit={(values) => {
+                  handleRejectEvent(event.id, values);
+                }}
+                initialValues={initialValues}
+              >
+                <Form id={formId}>
+                  <Field
+                    as={InputEM}
+                    type="text"
+                    name="rejectionReason"
+                    textarea
+                    height={100}
+                    placeholder="Wpisz powód"
+                  />
+                </Form>
+              </Formik>
+            </div>
+          </InfoModalEM>
         </div>
       )}
     </>
