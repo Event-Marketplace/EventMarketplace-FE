@@ -102,14 +102,15 @@ const EditEventModal = ({
 
   return (
     <SideModalEM
-      setOpen={open}
+      isOpen={open}
       title={`${event?.title}`}
       visibleCancelBtn
       visibleConfirmBtn
-      cancelText="dd"
-      confirmText="ad"
+      cancelText="Cofnij"
+      confirmText="Zapisz zmiany"
       onCancel={onClose}
       onSubmit={() => handleSubmit}
+      formId="edit-event-form"
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values }) => (

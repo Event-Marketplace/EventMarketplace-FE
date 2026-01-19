@@ -1,3 +1,4 @@
+import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
 import { Address } from "@/types/Event";
 
 export interface Event{
@@ -18,4 +19,5 @@ export interface Event{
     locationType: string;
     addressResponse: Address | null
     descriptionEventPlace: string;
+    comments: EventComment[];
 };

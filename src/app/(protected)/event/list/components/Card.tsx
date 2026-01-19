@@ -7,16 +7,24 @@ import editIcon from "@/images/pencil.svg";
 import removeIcon from "@/images/trash.svg";
 import membersIcon from "@/images/users.svg";
 import planeIcon from "@/images/plane.svg";
-import { useState } from "react";
+import commentIcon from "@/images/comment.svg";
+import { useEffect, useState } from "react";
 import { statusVariantMap } from "@/lib/const";
 import { EventStatus } from "@/types/types";
 import SideModalEM from "@/components/ui/modals/SideModalEM";
+import CommentSideModal from "@/app/(protected)/admin-panel/events/components/CommentSideModal";
+import { useSignalR } from "@/lib/signalR/SignalRProvider";
+import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/store";
+import { useEventComments } from "@/app/(protected)/admin-panel/events/hooks/useEventComments";
 
 type OrganizerEventCardProps = {
   event: Event;
   onDelete: () => void;
   onOpenSideModal: () => void;
   onSubmitEvent: () => void;
+  onSuccess?: () => void;
 };
 
 const OrganizerEventCard = ({
@@ -24,9 +32,33 @@ const OrganizerEventCard = ({
   onDelete,
   onOpenSideModal,
   onSubmitEvent,
+  onSuccess,
 }: OrganizerEventCardProps) => {
   const [openDetail, setOpenDetails] = useState<boolean>(false);
   const imageSrc = event.imageUrl;
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const userId = useSelector((state: AppState) => state.auth.userId);
+  const currentContext = localStorage.getItem("currentContext");
+
+  const { comments, unReadCount, addComment, markAsRead } = useEventComments({
+    eventId: event.id,
+    initialComments: event.comments,
+    userId: userId ?? "",
+  });
+
+  const handleOpenCommentModal = async () => {
+    setOpenModal(true);
+    await markAsRead();
+  };
+
+  const handleAddComment = async (content: string) => {
+    await addComment(content, currentContext);
+  };
+
+  const handleCloseCommentModal = async () => {
+    setOpenModal(false);
+  };
 
   const startEvent = new Intl.DateTimeFormat("pl-PL", {
     dateStyle: "medium",
@@ -121,6 +153,24 @@ const OrganizerEventCard = ({
           >
             <Image src={removeIcon} height={24} width={24} alt="remove" />
           </div>
+
+          <div
+            className="relative inline-flex"
+            onClick={handleOpenCommentModal}
+          >
+            <Image
+              className="block hover:cursor-pointer"
+              src={commentIcon}
+              width={28}
+              height={28}
+              alt="add-comment-icon"
+            />
+            {unReadCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center font-bold rounded-full shadow-lg">
+                {unReadCount > 99 ? "99+" : unReadCount}
+              </span>
+            )}
+          </div>
         </div>
 
         {openDetail && (
@@ -155,6 +205,14 @@ const OrganizerEventCard = ({
           </div>
         )}
       </div>
+      <CommentSideModal
+        comments={comments}
+        onClose={handleCloseCommentModal}
+        onCreateComment={handleAddComment}
+        open={openModal}
+        onSuccess={onSuccess}
+        formId="organizer-comment-form"
+      />
     </div>
   );
 };

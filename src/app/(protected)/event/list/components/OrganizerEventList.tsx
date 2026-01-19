@@ -7,10 +7,10 @@ import { Event } from "@/lib/interfaces";
 import { apiAxios } from "@/lib/apiAxios";
 import OrganizerEventCard from "./Card";
 import ListWrapper from "@/components/ui/list/ListWrapper";
-import { EventStatusBE } from "@/types/types";
-import SideModalEM from "@/components/ui/modals/SideModalEM";
-import EditModal from "./EditEventModal";
 import EditEventModal from "./EditEventModal";
+import { SignalRProvider, useSignalR } from "@/lib/signalR/SignalRProvider";
+import { EventComment } from "@/app/(protected)/admin-panel/events/components/AdminEventList";
+import { HubConnectionState } from "@microsoft/signalr";
 
 type FilterProps = {
   title?: string;
@@ -27,6 +27,7 @@ const OrganizerEventList = () => {
   const [statusOptions, setStatusOptions] = useState<[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event>();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const conn = useSignalR();
 
   const fetchEvents = async () => {
     try {
@@ -39,6 +40,7 @@ const OrganizerEventList = () => {
       console.log("events from be", res.data.events);
       setEvents(res.data.events);
       setTotalItems(res.data.totalCount);
+      console.log("events", res.data.events);
     } catch {
       console.log("error");
     }
@@ -148,6 +150,7 @@ const OrganizerEventList = () => {
                 onSubmitEvent={() => {
                   handleSubmitEvent(event.id);
                 }}
+                onSuccess={fetchEvents}
               />
             ))}
           </div>

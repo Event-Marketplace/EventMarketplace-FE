@@ -3,16 +3,28 @@
 import CardWrapper from "@/components/ui/list/CardWrapper";
 import ListWrapper from "@/components/ui/list/ListWrapper";
 import { apiAxios } from "@/lib/apiAxios";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import calendarIcon from "@/images/calendar.svg";
 import { Tabs } from "./EventTabs";
 import InfoModalEM from "@/components/ui/modals/InfoModalEM";
 import AdminEventCard from "./AdminEventCard";
+import { useSignalR } from "@/lib/signalR/SignalRProvider";
+import { HubConnectionState } from "@microsoft/signalr";
 
 export interface EventStatusType {
   statusIndex: number;
   statusName: string;
   statusDisplayName: string;
+}
+
+export interface EventComment {
+  id: string;
+  content: string;
+  user: string;
+  createdAt: string;
+  eventId: string;
+  userId: string;
+  wasRead: boolean;
 }
 
 export interface AdminEvent {
@@ -28,6 +40,7 @@ export interface AdminEvent {
   fullName: string;
   email: string;
   phone: string;
+  comments: EventComment[];
 }
 
 export interface AdminEventListType {
@@ -55,19 +68,19 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
     totalPages: 1,
   };
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const res = await apiAxios.get("Event/admin", {
-        params: {
-          Tab: tab,
-        },
-      });
-      setEvents(res.data);
-      if (handleCount) {
-        handleCount(res.data.eventList.length);
-      }
-    };
+  const fetchEvents = async () => {
+    const res = await apiAxios.get("Event/admin", {
+      params: {
+        Tab: tab,
+      },
+    });
+    setEvents(res.data);
+    if (handleCount) {
+      handleCount(res.data.eventList.length);
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -88,6 +101,7 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
   const handleCloseDescModal = () => {
     setOpenDescModal(false);
   };
+
   return (
     <ListWrapper
       data={data}
@@ -102,6 +116,7 @@ const AdminEventList = ({ tab, handleCount }: AdminEventListProps) => {
             tab={tab}
             handleImageModal={handleImageModal}
             handleOpenDescModal={handleOpenDescModal}
+            onSuccess={fetchEvents}
           />
         </CardWrapper>
       ))}

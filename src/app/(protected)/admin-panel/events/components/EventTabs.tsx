@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AdminEventList from "./AdminEventList";
+import { SignalRProvider } from "@/lib/signalR/SignalRProvider";
 
 export enum Tabs {
   Pending = "Pending",
@@ -57,14 +58,16 @@ const EventTabs = () => {
         </button>
       </div>
 
-      <div className="mt-4">
-        {activeTab === Tabs.Pending && (
-          <AdminEventList tab={activeTab} handleCount={setPendingCount} />
-        )}
-        {activeTab === Tabs.Approved && <AdminEventList tab={activeTab} />}
-        {activeTab === Tabs.Rejected && <AdminEventList tab={activeTab} />}
-        {activeTab === Tabs.All && <AdminEventList tab={activeTab} />}
-      </div>
+      <SignalRProvider>
+        <div className="mt-4">
+          {activeTab === Tabs.Pending && (
+            <AdminEventList tab={activeTab} handleCount={setPendingCount} />
+          )}
+          {activeTab === Tabs.Approved && <AdminEventList tab={activeTab} />}
+          {activeTab === Tabs.Rejected && <AdminEventList tab={activeTab} />}
+          {activeTab === Tabs.All && <AdminEventList tab={activeTab} />}
+        </div>
+      </SignalRProvider>
     </div>
   );
 };
