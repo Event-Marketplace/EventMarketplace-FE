@@ -41,6 +41,7 @@ export interface AdminEvent {
   email: string;
   phone: string;
   comments: EventComment[];
+  rejectionReason: string | null;
 }
 
 export interface AdminEventListType {
