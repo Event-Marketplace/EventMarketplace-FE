@@ -45,7 +45,7 @@ const PanelAdmin = () => {
   };
 
   const handleOrganizers = () => {
-    console.log("organizatorzy");
+    router.push("/admin-panel/organizers");
   };
 
   const handleSettings = () => {

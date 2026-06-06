@@ -63,8 +63,8 @@ const PanelOrg = () => {
   const items = [
     "Moje wydarzenia",
     "Dodaj wydarzenie",
-    "Statystyki",
-    "Powiadomienia",
+    // "Statystyki",
+    // "Powiadomienia",
   ];
   if (loading) return <p className="text-center py-10">Ładowanie panelu...</p>;
 
@@ -116,7 +116,7 @@ const PanelOrg = () => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <p className="text-2xl p-6">
             <strong>Statystyki</strong>
           </p>
@@ -143,9 +143,9 @@ const PanelOrg = () => {
               <p>tutaj dane</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <p className="text-2xl p-6">
             <strong>Powiadomienia</strong>
           </p>
@@ -158,7 +158,7 @@ const PanelOrg = () => {
               <p>tutaj dane</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
