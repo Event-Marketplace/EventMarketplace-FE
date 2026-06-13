@@ -163,14 +163,29 @@ const AdminEventCard = ({
       </div>
       <div className="w-1/7 flex flex-col">
         <label className="text-gray-500">Status</label>
-        <Badge
-          className="mr-auto"
-          variant={
-            statusVariantMap[event.eventStatus.statusName as EventStatus]
-          }
-        >
-          {event.eventStatus.statusDisplayName}
-        </Badge>
+        {event.eventStatus.statusDisplayName === "Odrzucone" ? (
+          <BasicTooltip text={event.rejectionReason ?? ""}>
+            <label className="text-gray-500 flex gap-2 font-semibold pointer">
+              <Badge
+                className="mr-auto"
+                variant={
+                  statusVariantMap[event.eventStatus.statusName as EventStatus]
+                }
+              >
+                {event.eventStatus.statusDisplayName}
+              </Badge>
+            </label>
+          </BasicTooltip>
+        ) : (
+          <Badge
+            className="mr-auto"
+            variant={
+              statusVariantMap[event.eventStatus.statusName as EventStatus]
+            }
+          >
+            {event.eventStatus.statusDisplayName}
+          </Badge>
+        )}
       </div>
       <div className="w-1/8 flex flex-col">
         <label className="text-gray-500 flex gap-2">

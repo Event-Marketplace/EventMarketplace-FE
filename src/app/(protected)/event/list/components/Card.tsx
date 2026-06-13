@@ -18,6 +18,7 @@ import { EventComment } from "@/app/(protected)/admin-panel/events/components/Ad
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/store";
 import { useEventComments } from "@/app/(protected)/admin-panel/events/hooks/useEventComments";
+import BasicTooltip from "@/components/ui/tooltips/BasicTooltip";
 
 type OrganizerEventCardProps = {
   event: Event;
@@ -107,9 +108,21 @@ const OrganizerEventCard = ({
         <div className="w-full md:w-1/4 xl:w-1/8 flex flex-col">
           <label className="text-gray-500">Status</label>
           <span>
-            <Badge variant={statusVariantMap[event.status as EventStatus]}>
-              {event.statusDisplayName}
-            </Badge>
+            {event.statusDisplayName === "Odrzucone" ? (
+              <BasicTooltip text={event.rejectionReason ?? ""}>
+                <label className="text-gray-500 flex gap-2 font-semibold pointer">
+                  <Badge
+                    variant={statusVariantMap[event.status as EventStatus]}
+                  >
+                    {event.statusDisplayName}
+                  </Badge>
+                </label>
+              </BasicTooltip>
+            ) : (
+              <Badge variant={statusVariantMap[event.status as EventStatus]}>
+                {event.statusDisplayName}
+              </Badge>
+            )}
           </span>
         </div>
         <div className=" flex gap-2 items-center justify-between">
@@ -121,8 +134,13 @@ const OrganizerEventCard = ({
           >
             <Image src={infoIcon} height={24} width={24} alt="info" />
           </div>
+
           <div
-            className="hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md"
+            className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
+              !["Draft", "Rejected"].includes(event.status)
+                ? "opacity-40 pointer-events-none"
+                : "hover:bg-white hover:scale-110"
+            }`}
             onClick={onOpenSideModal}
           >
             <Image src={editIcon} height={24} width={24} alt="edit" />
@@ -134,7 +152,7 @@ const OrganizerEventCard = ({
 
           <div
             className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
-              event.status !== "Draft"
+              !["Draft", "Rejected"].includes(event.status)
                 ? "opacity-40 pointer-events-none"
                 : "hover:bg-white hover:scale-110"
             }`}
@@ -145,7 +163,7 @@ const OrganizerEventCard = ({
 
           <div
             className={`hover: cursor-pointer hover:bg-white hover:scale-110 transition-all rounded-md ${
-              event.status !== "Draft"
+              !["Draft", "Rejected"].includes(event.status)
                 ? "opacity-40 pointer-events-none"
                 : "hover:bg-white hover:scale-110"
             }`}

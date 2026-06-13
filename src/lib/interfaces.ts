@@ -20,4 +20,5 @@ export interface Event{
     addressResponse: Address | null
     descriptionEventPlace: string;
     comments: EventComment[];
+    rejectionReason: string | null;
 };
