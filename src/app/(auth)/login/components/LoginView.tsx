@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, Formik } from "formik";
+import Link from "next/link";
 
 import ButtonEM from "@/components/ui/ButtonEM";
 import InputEM from "@/components/ui/InputEM";
@@ -12,15 +13,17 @@ import { apiAxios } from "@/lib/apiAxios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { setAccessToken } from "@/redux/auth/authSlice";
-import {
-  AuthCard,
-  LogoContent,
-  FormContent,
-  MobileLogoContent,
-  FormTitle,
-  AuthForm,
-} from "@/app/(auth)/CommonStyledComponents";
 import { AxiosError } from "axios";
+import {
+  AuthBrandCopy as BrandCopy,
+  AuthBrandPanel as BrandPanel,
+  AuthFormHeading as FormHeading,
+  AuthFormPanel as FormPanel,
+  AuthMobileBrand as MobileBrand,
+  ModernAuthCard as LoginCard,
+  ModernAuthForm as LoginForm,
+  ModernAuthShell as LoginShell,
+} from "@/app/(auth)/ModernAuthComponents";
 
 interface LoginValues {
   email: string;
@@ -90,54 +93,71 @@ const LoginView = () => {
   };
 
   return (
-    <AuthCard>
+    <LoginShell>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <>
-          <LogoContent>
-            <Image src={logo} alt="logo" onClick={handleHomePage} />
-          </LogoContent>
-          <FormContent>
-            <MobileLogoContent>
-              <Image src={logo} alt="logo" onClick={handleHomePage} />
-            </MobileLogoContent>
-            <FormTitle>Logowanie</FormTitle>
-            <AuthForm>
-              <Field
-                as={InputEM}
-                name="email"
-                type="text"
-                placeholder="E-mail"
-                width={300}
+          <LoginCard>
+            <BrandPanel>
+              <Image
+                src={logo}
+                alt="Event Marketplace"
+                onClick={handleHomePage}
               />
-              <Field
-                as={InputEM}
-                name="password"
-                type="password"
-                placeholder="Hasło"
-                width={300}
-              />
-              <ButtonEM
-                type="submit"
-                kind="primary"
-                text="Zaloguj się"
-                width={300}
-                style={{
-                  padding: "20px",
-                  borderRadius: "50px",
-                  fontSize: "18px",
-                }}
-              />
-              <p>
-                Nie posiadasz konta? Zarejestruj się{" "}
-                <a href="/register" style={{ textDecorationColor: "blue" }}>
-                  tutaj!
-                </a>
-              </p>
-            </AuthForm>
-          </FormContent>
+              <BrandCopy>
+                <p>Witaj ponownie</p>
+                <h2>Twoje kolejne wydarzenie jest na wyciągnięcie ręki.</h2>
+                <p>
+                  Zaloguj się i wróć do odkrywania spotkań, koncertów i emocji
+                  na żywo.
+                </p>
+              </BrandCopy>
+            </BrandPanel>
+            <FormPanel>
+              <MobileBrand>
+                <Image
+                  src={logo}
+                  alt="Event Marketplace"
+                  onClick={handleHomePage}
+                />
+              </MobileBrand>
+              <FormHeading>
+                <p>Event Marketplace</p>
+                <h1>Zaloguj się</h1>
+                <span>Wprowadź dane swojego konta, aby kontynuować.</span>
+              </FormHeading>
+              <LoginForm>
+                <Field
+                  as={InputEM}
+                  name="email"
+                  type="email"
+                  placeholder="Adres e-mail"
+                />
+                <Field
+                  as={InputEM}
+                  name="password"
+                  type="password"
+                  placeholder="Hasło"
+                />
+                <ButtonEM
+                  type="submit"
+                  kind="secondary"
+                  text="Zaloguj się"
+                  style={{
+                    padding: "15px 20px",
+                    borderRadius: "12px",
+                    fontSize: "16px",
+                  }}
+                />
+                <p>
+                  Nie posiadasz konta? Zarejestruj się{" "}
+                  <Link href="/register">tutaj!</Link>
+                </p>
+              </LoginForm>
+            </FormPanel>
+          </LoginCard>
         </>
       </Formik>
-    </AuthCard>
+    </LoginShell>
   );
 };
 

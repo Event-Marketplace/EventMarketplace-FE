@@ -1,11 +1,11 @@
 "use client";
 
-import styled from "styled-components";
 import logo from "@/images/logoWithText.svg";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Field, Form, Formik } from "formik";
+import { Field, Formik } from "formik";
 import toast from "react-hot-toast";
 import { apiAxios } from "@/lib/apiAxios";
 
@@ -13,13 +13,15 @@ import { AxiosError } from "axios";
 import ButtonEM from "@/components/ui/ButtonEM";
 import InputEM from "@/components/ui/InputEM";
 import {
-  AuthCard,
-  LogoContent,
-  FormContent,
-  MobileLogoContent,
-  FormTitle,
-  AuthForm,
-} from "../../CommonStyledComponents";
+  AuthBrandCopy,
+  AuthBrandPanel,
+  AuthFormHeading,
+  AuthFormPanel,
+  AuthMobileBrand,
+  ModernAuthCard,
+  ModernAuthForm,
+  ModernAuthShell,
+} from "../../ModernAuthComponents";
 
 interface RegisterValues {
   email: string;
@@ -107,62 +109,78 @@ const RegisterView = () => {
   };
 
   return (
-    <AuthCard>
+    <ModernAuthShell>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <>
-          <LogoContent>
-            <Image src={logo} alt="logo" onClick={handleHomePage} />
-          </LogoContent>
-          <FormContent>
-            <MobileLogoContent>
-              <Image src={logo} alt="logo" onClick={handleHomePage} />
-            </MobileLogoContent>
-            <FormTitle>Rejestracja</FormTitle>
-            <AuthForm>
-              <Field
-                as={InputEM}
-                name="email"
-                type="text"
-                placeholder="E-mail"
-                width={300}
+          <ModernAuthCard>
+            <AuthBrandPanel>
+              <Image
+                src={logo}
+                alt="Event Marketplace"
+                onClick={handleHomePage}
               />
-              <Field
-                as={InputEM}
-                name="password"
-                type="password"
-                placeholder="Hasło"
-                width={300}
-              />
-
-              <Field
-                as={InputEM}
-                name="confirmPassword"
-                type="password"
-                placeholder="Powtórz hasło"
-                width={300}
-              />
-              <ButtonEM
-                type="submit"
-                kind="primary"
-                text="Zarejestruj się"
-                width={300}
-                style={{
-                  padding: "20px",
-                  borderRadius: "50px",
-                  fontSize: "18px",
-                }}
-              />
-              <p>
-                Posiadasz już konto? Zaloguj się{" "}
-                <a href="/login" style={{ textDecorationColor: "blue" }}>
-                  tutaj!
-                </a>
-              </p>
-            </AuthForm>
-          </FormContent>
+              <AuthBrandCopy>
+                <p>Dołącz do społeczności</p>
+                <h2>Odkrywaj wydarzenia i twórz własne wspomnienia.</h2>
+                <p>
+                  Załóż konto i miej ciekawe wydarzenia zawsze w zasięgu ręki.
+                </p>
+              </AuthBrandCopy>
+            </AuthBrandPanel>
+            <AuthFormPanel>
+              <AuthMobileBrand>
+                <Image
+                  src={logo}
+                  alt="Event Marketplace"
+                  onClick={handleHomePage}
+                />
+              </AuthMobileBrand>
+              <AuthFormHeading>
+                <p>Event Marketplace</p>
+                <h1>Utwórz konto</h1>
+                <span>
+                  Wypełnij formularz, aby dołączyć do Event Marketplace.
+                </span>
+              </AuthFormHeading>
+              <ModernAuthForm>
+                <Field
+                  as={InputEM}
+                  name="email"
+                  type="email"
+                  placeholder="Adres e-mail"
+                />
+                <Field
+                  as={InputEM}
+                  name="password"
+                  type="password"
+                  placeholder="Hasło"
+                />
+                <Field
+                  as={InputEM}
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Powtórz hasło"
+                />
+                <ButtonEM
+                  type="submit"
+                  kind="secondary"
+                  text="Zarejestruj się"
+                  style={{
+                    padding: "15px 20px",
+                    borderRadius: "12px",
+                    fontSize: "16px",
+                  }}
+                />
+                <p>
+                  Posiadasz już konto? Zaloguj się{" "}
+                  <Link href="/login">tutaj!</Link>
+                </p>
+              </ModernAuthForm>
+            </AuthFormPanel>
+          </ModernAuthCard>
         </>
       </Formik>
-    </AuthCard>
+    </ModernAuthShell>
   );
 };
 
