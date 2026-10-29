@@ -3,7 +3,6 @@
 import ButtonEM from "@/components/ui/ButtonEM";
 import { apiAxios } from "@/lib/apiAxios";
 import { AdminAlerts, AdminStats } from "@/types/types";
-import { stat } from "fs";
 import { useEffect, useState } from "react";
 import AdminStatsCard from "./AdminStatsCard";
 import AdminAlertsCard from "./AdminAlertsCard";
@@ -44,8 +43,8 @@ const PanelAdmin = () => {
     router.push("/admin-panel/events");
   };
 
-  const handleOrganizers = () => {
-    console.log("organizatorzy");
+  const handleUsers = () => {
+    router.push("/admin-panel/users");
   };
 
   const handleSettings = () => {
@@ -62,7 +61,7 @@ const PanelAdmin = () => {
 
   const actionButtons = [
     { label: "Wydarzenia", handle: handleEvents },
-    { label: "Organizatorzy", handle: handleOrganizers },
+    { label: "Użytkownicy", handle: handleUsers },
     { label: "Ustawienia", handle: handleSettings },
     { label: "Powiadomienia", handle: handleAlerts },
     { label: "Profil", handle: handleProfile },
