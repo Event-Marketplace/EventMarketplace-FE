@@ -9,7 +9,7 @@ import instaIcon from "@/images/insta.svg";
 import tiktokIcon from "@/images/tiktok.svg";
 import linkedinIcon from "@/images/linkedin.svg";
 import burgerIcon from "@/images/menuBurger.svg";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { breakpoints } from "@/styles/breakpoints";
 import { getUserFromToken, User } from "@/services/getUserFromToken";
@@ -37,6 +37,8 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/home";
 
   useEffect(() => {
     setIsMounted(true);
@@ -66,7 +68,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
   return (
     <>
       <GlobalBox>
-        <GlobalHeader>
+        <GlobalHeader $isHome={isHome}>
           <div className="flex justify-start items-center gap-8">
             <LogoClicked
               src={logoWithTextIcon}
@@ -85,7 +87,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
             />
           </HeaderPanelMenu>
           {isMenuOpen && (
-            <MobileMenu aria-label="Mobilne menu nawigacyjne">
+            <MobileMenu $isHome={isHome} aria-label="Mobilne menu nawigacyjne">
               <>
                 <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
                 <HeaderLink onClick={handleRegistration}>
@@ -98,7 +100,7 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
               </>
             </MobileMenu>
           )}
-          <HeaderPanelSection aria-label="Główne menu nawigacyjne">
+          <HeaderPanelSection $isHome={isHome} aria-label="Główne menu nawigacyjne">
             <>
               <HeaderLink onClick={handleLogin}>Logowanie</HeaderLink>
               <HeaderLink onClick={handleRegistration}>Rejestracja</HeaderLink>
@@ -110,11 +112,11 @@ const GlobalLayout = ({ children }: GlobalLayoutProps) => {
           </HeaderPanelSection>
         </GlobalHeader>
         <GlobalContent>{children}</GlobalContent>
-        <GlobalFooter>
-          <LogoWrapper>
+        <GlobalFooter $isHome={isHome}>
+          <LogoWrapper $isHome={isHome}>
             <Image src={logoWithTextIcon} alt="logo z tekstem" />
           </LogoWrapper>
-          <FooterInformationSection>
+          <FooterInformationSection $isHome={isHome}>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             >
